@@ -1,3 +1,5 @@
+/*#75ffd3*/
+
 * {
     font-family: Poppins;
 }
@@ -123,7 +125,7 @@ footer {
 
 .form-box {
     display: flex;
-    background-color: #565454;
+    background-color: rgba(0, 0, 0, 0.5);
     flex-direction: column;
     justify-content: center;
     width: 500px;
@@ -147,7 +149,7 @@ footer {
     margin: 15px 0px;
     height: 50px;
     width: 100%;
-    border-bottom: 2px solid rgba(0, 0, 0, 0.75);
+    border-bottom: 2px solid white;
     font-size: 18px;
     color: #fff;
 }
@@ -198,44 +200,42 @@ footer {
     font-weight: 500;
 }
 
-    .btn:hover {
+    .form-box .btn:hover {
         box-shadow: 2px 2px 8px 3px rgba(1,1,1,0.5);
         color: #000;
         background-color: #75ffd3;
     }
 
-.admin {
+.form-box .admin {
     background-color: #ff5050;
     color: #000;
 }
 
-    .admin:hover {
+    .form-box .admin:hover {
         background-color: #ff2626;
     }
 
-.employee {
+.form-box .employee {
     background-color: #cdcdcd;
     color: #000;
 }
 
-    .employee:hover {
+    .form-box .employee:hover {
         background-color: #e8e8e8;
     }
-
-/*#75ffd3*/
 
 .btn-accept {
     background-color: lawngreen;
     height: 40px;
-    width: 80px;
+    width: 60px;
     font-size: 16px;
-    margin: 5px;
+    margin: 0px;
 }
 
 .btn-reject {
     background-color: #ff5050;
     height: 40px;
-    width: 80px;
+    width: 60px;
     font-size: 16px;
     margin: 5px;
 }
@@ -243,9 +243,16 @@ footer {
 .btn-pending {
     background-color: #ffac19;
     height: 40px;
-    width: 80px;
+    width: 60px;
     font-size: 16px;
     margin: 5px;
+}
+
+.btn ion-icon {
+    position: relative;
+    font-size: 35px;
+    color: #000;
+    top: -5px;
 }
 
 .table {
