@@ -94,7 +94,8 @@ footer {
 .logo, .logo:hover {
     text-decoration: none;
     font-size: 36px;
-    color: #fff;
+    color: #75ffd3;
+    font-weight: 700;
 }
 
 .page {
@@ -102,7 +103,7 @@ footer {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-/*    height: 160vh;*/
+    /*    height: 160vh;*/
     text-align: center;
 }
 
@@ -114,7 +115,93 @@ footer {
     align-items: center;
 }
 
-.page h1{
+.page h1 {
     font-size: 36px;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
+    color: #75ffd3;
 }
+
+.form-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 500px;
+    padding: 20px;
+}
+
+.input-box {
+    position: relative;
+    margin: 20px 0px;
+    height: 50px;
+    width: 100%;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.75);
+    font-size: 18px;
+    color: #fff;
+}
+
+    .input-box label {
+        position: absolute;
+        top: 50%;
+        left: 5px;
+        transform: translateY(-50%);
+        pointer-events: none;
+        transition: .5s;
+    }
+
+    .input-box input {
+        background: transparent;
+        border: none;
+        outline: none;
+        height: 100%;
+        width: 100%;
+        color: #75ffd3;
+    }
+
+        .input-box input:focus ~ label,
+        .input-box input:valid ~ label {
+            top: -5px;
+        }
+
+.form-box h1 {
+    font-size: 28px;
+    padding: 20px;
+}
+
+.btn {
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 15px;
+    border: none;
+    background-color: #cdcdcd;
+    color: #000;
+    cursor: pointer;
+    transition: .3s;
+    width: 100%;
+    align-content: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+    .btn:hover {
+        box-shadow: 2px 2px 8px 3px rgba(1,1,1,0.5);
+        color: #000;
+        background-color: #75ffd3;
+    }
+
+.admin {
+    background-color: #ff5050;
+    color: #000;
+}
+
+    .admin:hover {
+        background-color: #ff2626;
+    }
+
+.employee {
+    background-color: #cdcdcd;
+    color: #000;
+}
+
+/*#75ffd3*/
