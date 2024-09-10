@@ -41,7 +41,7 @@ body {
     background: linear-gradient(#2a2a2a, #4d4d4d);
     background-size: cover;
     background-position: center;
-    margin: 150px;
+    margin-top: 125px;
     color: #fff;
 }
 
@@ -110,7 +110,7 @@ footer {
 .wrapper {
     position: relative;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
 }
@@ -123,10 +123,14 @@ footer {
 
 .form-box {
     display: flex;
+    background-color: #565454;
     flex-direction: column;
     justify-content: center;
     width: 500px;
-    padding: 20px;
+    padding: 30px;
+    margin: 50px;
+    border-radius: 15px;
+    border: 2px solid rgba(255, 255, 255, .4);
 }
 
 .input-box {
@@ -163,8 +167,9 @@ footer {
         }
 
 .form-box h1 {
-    font-size: 28px;
-    padding: 20px;
+    font-size: 36px;
+    margin-bottom: 10px;
+    color: #75ffd3;
 }
 
 .btn {
@@ -203,5 +208,9 @@ footer {
     background-color: #cdcdcd;
     color: #000;
 }
+
+    .employee:hover {
+        background-color: #e8e8e8;
+    }
 
 /*#75ffd3*/
