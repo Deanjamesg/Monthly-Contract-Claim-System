@@ -18,7 +18,15 @@ namespace CMCS_Web_App.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Login()
+        {
+            return View();
+        }
+        public IActionResult CreateClaim()
+        {
+            return View();
+        }
+        public IActionResult ReviewClaim()
         {
             return View();
         }

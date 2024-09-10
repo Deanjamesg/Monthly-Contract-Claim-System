@@ -12,11 +12,13 @@
 <body>
 
     <header>
-        <a class="logo" asp-controller="Home" asp-action="Home">CMCS</a>
+        <a class="logo" asp-controller="Home" asp-action="Index">CMCS</a>
 
         <nav class="navbar">
-            <a asp-controller="Home" asp-action="Home">Home</a>
-            <a asp-controller="Privacy" asp-action="Privacy">Privacy</a>
+            <a asp-controller="Home" asp-action="Index">Home</a>
+            <a asp-controller="Home" asp-action="CreateClaim">Make Claims</a>
+            <a asp-controller="Home" asp-action="ReviewClaim">Review Claims</a>
+            <a asp-controller="Home" asp-action="Login">Login</a>
         </nav>
     </header>
 

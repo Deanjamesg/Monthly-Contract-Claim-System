@@ -41,7 +41,7 @@ body {
     background: linear-gradient(#2a2a2a, #4d4d4d);
     background-size: cover;
     background-position: center;
-    margin: 200px;
+    margin: 150px;
     color: #fff;
 }
 
@@ -95,4 +95,26 @@ footer {
     text-decoration: none;
     font-size: 36px;
     color: #fff;
+}
+
+.page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+/*    height: 160vh;*/
+    text-align: center;
+}
+
+.wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.page h1{
+    font-size: 36px;
+    margin-bottom: 40px;
 }
