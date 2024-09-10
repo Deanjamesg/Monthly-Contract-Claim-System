@@ -128,9 +128,13 @@ footer {
     justify-content: center;
     width: 500px;
     padding: 30px;
-    margin: 50px;
+    margin: 15px;
     border-radius: 15px;
     border: 2px solid rgba(255, 255, 255, .4);
+}
+
+.form-box hr {
+    color: transparent;
 }
 
 .file {
@@ -140,7 +144,7 @@ footer {
 
 .input-box {
     position: relative;
-    margin: 20px 0px;
+    margin: 15px 0px;
     height: 50px;
     width: 100%;
     border-bottom: 2px solid rgba(0, 0, 0, 0.75);
@@ -220,4 +224,55 @@ footer {
 
 /*#75ffd3*/
 
+.btn-accept {
+    background-color: lawngreen;
+    height: 40px;
+    width: 80px;
+    font-size: 16px;
+    margin: 5px;
+}
+
+.btn-reject {
+    background-color: #ff5050;
+    height: 40px;
+    width: 80px;
+    font-size: 16px;
+    margin: 5px;
+}
+
+.btn-pending {
+    background-color: #ffac19;
+    height: 40px;
+    width: 80px;
+    font-size: 16px;
+    margin: 5px;
+}
+
+.table {
+    text-align: center;
+    width: 100%;
+    border: 2px solid rgba(255, 255, 255, .4);
+    padding: 50px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+    color: white;
+    border-spacing: 0 25px;
+}
+
+    .table th {
+        font-size: 20px;
+        font-weight: 550;
+        color: white;
+        padding: 20px;
+    }
+
+    .table td {
+        padding: 5px;
+        gap: 90px;
+        margin: 10px;
+    }
+    .table a {
+        text-decoration: none;
+        color: #75ffd3;
+    }
 

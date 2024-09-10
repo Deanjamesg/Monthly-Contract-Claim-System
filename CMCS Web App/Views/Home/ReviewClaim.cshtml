@@ -3,8 +3,35 @@
 }
 
 <div class="page">
-    <h1>Review Requested Claims</h1>
+    
     <div class="wrapper">
-        <p>Review the list of all requested claims below.</p>
+        
+        <div class="table">
+            <h1>Review Requested Claims</h1>
+            <p>Review the list of all requested claims below.</p>
+            <table>
+                <tr style="border: none;">
+                    <th>Lecturer ID</th>
+                    <th>Contract ID</th>
+                    <th>Claim Amount</th>
+                    <th>File</th>
+                    <th>Status</th>
+                </tr>
+                    <tr style="border: none;">
+                        <td>461246</td>
+                        <td>123674</td>
+                        <td>R4500 </td>
+                        <td><a href="#">Invoice.pdf</a></td>
+                        <td>
+                        <button class="btn btn-accept" type="submit">
+                            <ion-icon name="checkmark-outline"></ion-icon>
+                        </button>
+                        <button class="btn btn-reject" type="submit">
+                            <ion-icon name="close-outline"></ion-icon>
+                        </button>
+                        </td>
+                    </tr>
+            </table>
+        </div>
     </div>
 </div>
