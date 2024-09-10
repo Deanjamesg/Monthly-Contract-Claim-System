@@ -133,6 +133,11 @@ footer {
     border: 2px solid rgba(255, 255, 255, .4);
 }
 
+.file {
+    color: #75ffd3;
+    font-size: 16px;
+}
+
 .input-box {
     position: relative;
     margin: 20px 0px;
@@ -185,7 +190,7 @@ footer {
     align-content: center;
     justify-content: center;
     text-align: center;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 500;
 }
 
@@ -214,3 +219,5 @@ footer {
     }
 
 /*#75ffd3*/
+
+
