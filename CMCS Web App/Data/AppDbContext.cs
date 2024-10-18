@@ -10,6 +10,7 @@ namespace CMCS_Web_App.Data
         DbSet<AcademicManager> AcademicManagers { get; set; }
         DbSet<ProgrammeCoordinator> ProgrammeCoordinators { get; set; }
         DbSet<Lecturer> Lecturers { get; set; }
+        DbSet<Claim> Claims { get; set; }
 
     }
 }
