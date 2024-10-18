@@ -119,15 +119,29 @@ footer {
     align-items: center;
 }
 
+.box {
+    display: flex;
+    background-color: rgba(15, 15, 15 , 0.8);
+    backdrop-filter: blur(3px);
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    padding: 30px;
+    margin: 10px;
+    border-radius: 15px;
+    border: 2px solid rgba(255, 255, 255, .75);
+}
+
 .page h1 {
     font-size: 36px;
     margin-bottom: 20px;
-    color: #75ffd3;
+    /*    color: #75ffd3;*/
+    color: #fff;
 }
 
 .form-box {
     display: flex;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(15, 15, 15, 0.8);
     backdrop-filter: blur(3px);
     flex-direction: column;
     justify-content: center;
@@ -143,7 +157,7 @@ footer {
 }
 
 .file {
-    color: #75ffd3;
+    color: #fff;
     font-size: 16px;
 }
 
@@ -172,24 +186,31 @@ footer {
         outline: none;
         height: 100%;
         width: 100%;
-        color: #75ffd3;
+/*        color: #75ffd3;*/
+        color: #fff;
     }
 
         .input-box input:focus ~ label,
         .input-box input:valid ~ label {
             top: -5px;
+            opacity: 0.4;
         }
 
 .form-box h1 {
     font-size: 36px;
     margin-bottom: 10px;
-    color: #75ffd3;
+    /*    color: #75ffd3;*/
+    color: #fff;
+}
+
+.form-box p {
+    margin-top: 15px;
 }
 
 .btn {
     padding: 10px;
     border-radius: 5px;
-    margin-top: 15px;
+    margin-top: 10px;
     border: none;
     background-color: #cdcdcd;
     color: #000;
@@ -206,16 +227,19 @@ footer {
     .form-box .btn:hover {
         box-shadow: 2px 2px 8px 3px rgba(1,1,1,0.5);
         color: #000;
-        background-color: #75ffd3;
+/*        background-color: #75ffd3;*/
+        background-color: #fff;
     }
 
 .form-box .admin {
-    background-color: #ff5050;
+/*    background-color: #ff5050;*/
+    background-color: #ff6565;
     color: #000;
 }
 
     .form-box .admin:hover {
-        background-color: #ff2626;
+        /*        background-color: #ff2626;*/
+        background-color: #ff5050;
     }
 
 .form-box .employee {
@@ -228,20 +252,30 @@ footer {
     }
 
 .btn-accept {
-    background-color: lawngreen;
+    background-color: #1ce700;
     height: 40px;
-    width: 60px;
+    width: 90px;
     font-size: 16px;
     margin: 0px;
+    transition: .5s;
 }
 
+    .btn-accept:hover {
+        background-color: #1ffc00;
+    }
+
 .btn-reject {
-    background-color: #ff5050;
+    background-color: #ff3737;
     height: 40px;
-    width: 60px;
+    width: 80px;
     font-size: 16px;
     margin: 5px;
+    transition: .5s;
 }
+
+    .btn-reject:hover {
+        background-color: #ff0000;
+    }
 
 .btn-pending {
     background-color: #ffac19;
@@ -249,13 +283,6 @@ footer {
     width: 60px;
     font-size: 16px;
     margin: 5px;
-}
-
-.btn ion-icon {
-    position: relative;
-    font-size: 35px;
-    color: #000;
-    top: -5px;
 }
 
 .table {
