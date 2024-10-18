@@ -3,6 +3,7 @@ using CMCS_Web_App.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CMCS_Web_App.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241018142633_RemoveClaimTable")]
+    partial class RemoveClaimTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,39 +51,6 @@ namespace CMCS_Web_App.Migrations
                     b.HasKey("AcademicManagerId");
 
                     b.ToTable("AcademicManagers");
-                });
-
-            modelBuilder.Entity("CMCS_Web_App.Models.Claim", b =>
-                {
-                    b.Property<int>("ClaimId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClaimId"));
-
-                    b.Property<double>("ClaimAmount")
-                        .HasColumnType("float");
-
-                    b.Property<string>("ClaimStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FileName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("HourlyRate")
-                        .HasColumnType("float");
-
-                    b.Property<double>("HoursWorked")
-                        .HasColumnType("float");
-
-                    b.Property<int>("LecturerId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ClaimId");
-
-                    b.ToTable("Claims");
                 });
 
             modelBuilder.Entity("CMCS_Web_App.Models.Lecturer", b =>
