@@ -10,6 +10,7 @@ namespace CMCS_Web_App.Models
         public string Surname { get; set; }
         public string Email { get; set; }
         public string Faculty { get; set; }
+        public string Password { get; set; }
 
     }
 }

@@ -1,3 +1,4 @@
+using CMCS_Web_App.Data;
 using CMCS_Web_App.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -8,9 +9,12 @@ namespace CMCS_Web_App.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private readonly AppDbContext _context;
+
+        public HomeController(ILogger<HomeController> logger, AppDbContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
@@ -22,10 +26,17 @@ namespace CMCS_Web_App.Controllers
         {
             return View();
         }
+
+        public IActionResult Register()
+        {
+            return View();
+        }
+
         public IActionResult CreateClaim()
         {
             return View();
         }
+
         public IActionResult ReviewClaim()
         {
             return View();
