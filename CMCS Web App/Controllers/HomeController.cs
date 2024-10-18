@@ -67,6 +67,41 @@ namespace CMCS_Web_App.Controllers
             return RedirectToAction("Login", "Home");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> SubmitNewClaim(Claim claim, IFormFile file)
+        {
+            if (file != null && file.Length > 0)
+            {
+                var fileName = Path.GetFileName(file.FileName);
+
+                claim.FileName = fileName;
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    await file.CopyToAsync(memoryStream);
+
+                    claim.FileData = memoryStream.ToArray();
+                }
+            }
+
+            claim.ClaimStatus = "Pending";
+
+            try
+            {
+                _context.Add(claim);
+
+                _context.SaveChanges();
+
+                return RedirectToAction("ReviewClaim");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while saving the claim.");
+            }
+
+            return View("CreateClaim", claim);
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

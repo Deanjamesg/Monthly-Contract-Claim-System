@@ -12,5 +12,8 @@ namespace CMCS_Web_App.Models
         public string ClaimStatus { get; set; }
         public double HoursWorked { get; set; }
         public string FileName { get; set; }
+        public byte[] FileData { get; set; }
+
+        public Lecturer Lecturer { get; set; }
     }
 }

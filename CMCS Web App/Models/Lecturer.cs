@@ -12,5 +12,6 @@ namespace CMCS_Web_App.Models
         public string Faculty { get; set; }
         public string Password { get; set; }
 
+        public ICollection<Claim> Claims { get; set; }
     }
 }
