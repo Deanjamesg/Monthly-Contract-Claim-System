@@ -1,6 +1,7 @@
 using CMCS_Web_App.Data;
 using CMCS_Web_App.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace CMCS_Web_App.Controllers
@@ -24,16 +25,6 @@ namespace CMCS_Web_App.Controllers
 
         public IActionResult Login()
         {
-            //_context.Add(new Lecturer
-            //{
-            //    FirstName = "John",
-            //    Surname = "Doe",
-            //    Email = "john@doe.com",
-            //    Faculty = "Science"
-            //});
-
-            //_context.SaveChanges();
-
             return View();
         }
 
@@ -49,7 +40,49 @@ namespace CMCS_Web_App.Controllers
 
         public IActionResult ReviewClaim()
         {
-            return View();
+            // https://learn.microsoft.com/en-us/ef/core/querying/
+
+            var claims = _context.Claims.Include(c => c.Lecturer).ToList();
+
+            return View(claims);
+        }
+
+        public IActionResult DownloadFile(int Id)
+        {
+            // https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.firstordefault?view=net-8.0
+
+            var claim = _context.Claims.FirstOrDefault(c => c.ClaimId == Id);
+
+            if (claim == null || claim.FileData == null)
+            {
+                return NotFound();
+            }
+
+            //https://learn.microsoft.com/en-us/dotnet/api/system.web.mvc.filecontentresult?view=aspnet-mvc-5.2
+
+            return File(claim.FileData, "application/octet-stream", claim.FileName);
+        }
+
+        public IActionResult ApproveClaim(int Id)
+        {
+            var claim = _context.Claims.FirstOrDefault(c => c.ClaimId == Id);
+
+            claim.ClaimStatus = "Approved";
+
+            _context.SaveChanges();
+
+            return RedirectToAction("ReviewClaim");
+        }
+
+        public IActionResult RejectClaim(int Id)
+        {
+            var claim = _context.Claims.FirstOrDefault(c => c.ClaimId == Id);
+
+            claim.ClaimStatus = "Rejected";
+
+            _context.SaveChanges();
+
+            return RedirectToAction("ReviewClaim");
         }
 
         public IActionResult RegisterUser(Lecturer lecturer)
@@ -57,6 +90,7 @@ namespace CMCS_Web_App.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(lecturer);
+
                 _context.SaveChanges();
             }
             else
@@ -66,6 +100,8 @@ namespace CMCS_Web_App.Controllers
 
             return RedirectToAction("Login", "Home");
         }
+
+        //https://learn.microsoft.com/en-us/aspnet/core/mvc/models/file-uploads?view=aspnetcore-8.0
 
         [HttpPost]
         public async Task<IActionResult> SubmitNewClaim(Claim claim, IFormFile file)

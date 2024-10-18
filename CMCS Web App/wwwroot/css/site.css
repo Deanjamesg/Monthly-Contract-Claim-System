@@ -252,29 +252,29 @@ footer {
     }
 
 .btn-accept {
-    background-color: #1ce700;
+    background-color: #86ff84;
     height: 40px;
-    width: 90px;
+    width: 100px;
     font-size: 16px;
     margin: 0px;
     transition: .5s;
 }
 
     .btn-accept:hover {
-        background-color: #1ffc00;
+        background-color: #53fd51;
     }
 
 .btn-reject {
-    background-color: #ff3737;
+    background-color: #ff6c6c;
     height: 40px;
-    width: 80px;
+    width: 100px;
     font-size: 16px;
     margin: 5px;
     transition: .5s;
 }
 
     .btn-reject:hover {
-        background-color: #ff0000;
+        background-color: #ff4040;
     }
 
 .btn-pending {
@@ -290,7 +290,7 @@ footer {
     width: 100%;
     border: 2px solid rgba(255, 255, 255, .4);
     padding: 50px;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(15, 15, 15, 0.8);
     border-radius: 20px;
     color: white;
     border-spacing: 0 25px;
@@ -305,9 +305,7 @@ footer {
     }
 
     .table td {
-        padding: 5px;
-        gap: 90px;
-        margin: 10px;
+        padding: 20px;
     }
     .table a {
         text-decoration: none;
