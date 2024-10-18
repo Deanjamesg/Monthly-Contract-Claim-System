@@ -24,6 +24,16 @@ namespace CMCS_Web_App.Controllers
 
         public IActionResult Login()
         {
+            //_context.Add(new Lecturer
+            //{
+            //    FirstName = "John",
+            //    Surname = "Doe",
+            //    Email = "john@doe.com",
+            //    Faculty = "Science"
+            //});
+
+            //_context.SaveChanges();
+
             return View();
         }
 
@@ -40,6 +50,21 @@ namespace CMCS_Web_App.Controllers
         public IActionResult ReviewClaim()
         {
             return View();
+        }
+
+        public IActionResult RegisterUser(Lecturer lecturer)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(lecturer);
+                _context.SaveChanges();
+            }
+            else
+            {
+                return View("Register");
+            }
+
+            return RedirectToAction("Login", "Home");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
