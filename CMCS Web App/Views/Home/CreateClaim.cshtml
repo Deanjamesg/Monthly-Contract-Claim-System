@@ -36,6 +36,13 @@
                 
 
                 <button class="btn" type="submit">Submit Claim</button>
+
+                @if (TempData["SubmitClaimFailed"] != null)
+                {
+                    <div class="alert alert-danger">
+                        @TempData["SubmitClaimFailed"]
+                    </div>
+                }
             </form>
 
         </div>

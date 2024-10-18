@@ -18,25 +18,37 @@ namespace CMCS_Web_App.Controllers
             _context = context;
         }
 
+        //-----------------------------------------------------------------------------------
+
         public IActionResult Index()
         {
             return View();
         }
+
+        //-----------------------------------------------------------------------------------
 
         public IActionResult Login()
         {
             return View();
         }
 
+        //-----------------------------------------------------------------------------------
+
         public IActionResult Register()
         {
             return View();
         }
 
+        //-----------------------------------------------------------------------------------
+
         public IActionResult CreateClaim()
         {
             return View();
         }
+
+        //-----------------------------------------------------------------------------------
+
+        // Actions for the ReviewClaim View
 
         public IActionResult ReviewClaim()
         {
@@ -85,6 +97,17 @@ namespace CMCS_Web_App.Controllers
             return RedirectToAction("ReviewClaim");
         }
 
+        //-----------------------------------------------------------------------------------
+
+        public IActionResult TrackAllClaims()
+        {
+            var claims = _context.Claims.Include(c => c.Lecturer).ToList();
+
+            return View(claims);
+        }
+
+        //-----------------------------------------------------------------------------------
+
         public IActionResult RegisterUser(Lecturer lecturer)
         {
             if (ModelState.IsValid)
@@ -95,11 +118,15 @@ namespace CMCS_Web_App.Controllers
             }
             else
             {
+                TempData["RegisterFailed"] = "Incorrect details have been entered. Please ensure, all details have been entered correctly and you have filled in all the fields.";
                 return View("Register");
             }
 
+
             return RedirectToAction("Login", "Home");
         }
+
+        //-----------------------------------------------------------------------------------
 
         //https://learn.microsoft.com/en-us/aspnet/core/mvc/models/file-uploads?view=aspnetcore-8.0
 
@@ -132,11 +159,13 @@ namespace CMCS_Web_App.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while saving the claim.");
+                TempData["SubmitClaimFailed"] = "Incorrect details have been entered. Please ensure, all details have been entered correctly and you have filled in all the fields, and have attached the supporting documents.";
+                return View("CreateClaim");
             }
 
-            return View("CreateClaim", claim);
         }
+
+        //-----------------------------------------------------------------------------------
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

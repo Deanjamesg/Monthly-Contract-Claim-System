@@ -1,0 +1,53 @@
+﻿@model IEnumerable<CMCS_Web_App.Models.Claim>
+@{
+    ViewData["Title"] = "Track All Claims";
+}
+
+<div class="page">
+    <div class="wrapper">
+        <div class="table">
+
+            <h1>Review Requested Claims</h1>
+            <p>Review the list of all requested claims below.</p>
+            <table>
+                <tr>
+                    <th>Claim ID</th>
+                    <th>Lecturer ID</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Faculty</th>
+                    <th>Claim Amount</th>
+                    <th>File</th>
+                    <th>Status</th>
+                </tr>
+
+                @foreach (var claim in Model)
+                {
+                    <tr>
+                        <td>@claim.ClaimId</td>
+                        <td>@claim.LecturerId</td>
+                        <td>@claim.Lecturer.FirstName @claim.Lecturer.Surname</td>
+                        <td>@claim.Lecturer.Email</td>
+                        <td>@claim.Lecturer.Faculty</td>
+                        <td>R @claim.ClaimAmount</td>
+                        <td><a asp-controller="Home" asp-action="DownloadFile" asp-route-id="@claim.ClaimId">@claim.FileName</a></td>
+                        <td>
+                            @if (claim.ClaimStatus == "Pending")
+                            {
+                                <span class="pending">Pending</span>
+                            }
+                            else if (claim.ClaimStatus == "Approved")
+                            {
+                                <span class="approved">Approved</span>
+                            }
+                            else
+                            {
+                                <span class="rejected">Rejected</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>

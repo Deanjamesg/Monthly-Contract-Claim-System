@@ -210,7 +210,8 @@ footer {
 .btn {
     padding: 10px;
     border-radius: 5px;
-    margin-top: 10px;
+    margin-top: 40px;
+    margin-bottom: 20px;
     border: none;
     background-color: #cdcdcd;
     color: #000;
@@ -277,14 +278,6 @@ footer {
         background-color: #ff4040;
     }
 
-.btn-pending {
-    background-color: #ffac19;
-    height: 40px;
-    width: 60px;
-    font-size: 16px;
-    margin: 5px;
-}
-
 .table {
     text-align: center;
     width: 100%;
@@ -311,4 +304,16 @@ footer {
         text-decoration: none;
         color: #75ffd3;
     }
+
+span.approved {
+    color: #53fd51;
+}
+
+span.rejected {
+    color: #ff4040;
+}
+
+span.pending {
+    color: #ffac19;
+}
 

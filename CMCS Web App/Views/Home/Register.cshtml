@@ -7,7 +7,8 @@
     <div class="wrapper">
         <div class="form-box">
 
-            <h1>Register as Lecturer</h1>
+            <h1>Register</h1>
+            <p>Register as a Lecturer</p>
 
             <form asp-controller="Home" asp-action="RegisterUser" method="post">
 
@@ -38,6 +39,12 @@
 
                 <button class="btn" type="submit">Register</button>
 
+                @if (TempData["RegisterFailed"] != null)
+                {
+                    <div class="alert alert-danger">
+                        @TempData["RegisterFailed"]
+                    </div>
+                }
             </form>
 
         </div>
