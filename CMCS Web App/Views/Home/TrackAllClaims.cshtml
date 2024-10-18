@@ -17,6 +17,8 @@
                     <th>Email</th>
                     <th>Faculty</th>
                     <th>Claim Amount</th>
+                    <th>Hours Worked</th>
+                    <th>Hourly Rate</th>
                     <th>File</th>
                     <th>Status</th>
                 </tr>
@@ -30,6 +32,8 @@
                         <td>@claim.Lecturer.Email</td>
                         <td>@claim.Lecturer.Faculty</td>
                         <td>R @claim.ClaimAmount</td>
+                        <td>@claim.HoursWorked Hrs</td>
+                        <td>R @claim.HourlyRate / h</td>
                         <td><a asp-controller="Home" asp-action="DownloadFile" asp-route-id="@claim.ClaimId">@claim.FileName</a></td>
                         <td>
                             @if (claim.ClaimStatus == "Pending")

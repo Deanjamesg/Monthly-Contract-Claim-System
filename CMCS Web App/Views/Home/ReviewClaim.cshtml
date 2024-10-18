@@ -16,6 +16,8 @@
                     <th>Lecturer ID</th>
                     <th>Full Name</th>
                     <th>Claim Amount</th>
+                    <th>Hours Worked</th>
+                    <th>Hourly Rate</th>
                     <th>File</th>
                     <th>Review</th>
                 </tr>
@@ -29,6 +31,8 @@
                             <td>@claim.LecturerId</td>
                             <td>@claim.Lecturer.FirstName @claim.Lecturer.Surname</td>
                             <td>R @claim.ClaimAmount</td>
+                            <td>@claim.HoursWorked Hrs</td>
+                            <td>R @claim.HourlyRate / h</td>
                             <td><a asp-controller="Home" asp-action="DownloadFile" asp-route-id="@claim.ClaimId">@claim.FileName</a></td>
                             <td>
                                 <form asp-controller="Home" asp-action="ApproveClaim" method="post">

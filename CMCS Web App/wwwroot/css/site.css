@@ -306,14 +306,20 @@ footer {
     }
 
 span.approved {
-    color: #53fd51;
+    font-size: 16px;
+    font-weight: 500;
+    color: #2eff00;
 }
 
 span.rejected {
-    color: #ff4040;
+    font-size: 16px;
+    font-weight: 500;
+    color: #ff0e0e;
 }
 
 span.pending {
-    color: #ffac19;
+    font-size: 16px;
+    font-weight: 500;
+    color: #ffe000;
 }
 
