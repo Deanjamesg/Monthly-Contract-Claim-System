@@ -137,6 +137,15 @@ namespace CMCS_Web_App.Controllers
             {
                 var fileName = Path.GetFileName(file.FileName);
 
+                // Check if the file type is valid.
+                string[] fileTypes = { ".pdf", ".docx", ".png", ".jpg" };
+
+                if (!fileTypes.Any(type => fileName.EndsWith(type, StringComparison.OrdinalIgnoreCase)))
+                {
+                    TempData["SubmitClaimFailed"] = "Please submit a file type of one of the following: .pdf / .docx / .png / .jpg";
+                    return View("CreateClaim");
+                }
+
                 claim.FileName = fileName;
 
                 using (var memoryStream = new MemoryStream())
