@@ -228,27 +228,27 @@ footer {
     .form-box .btn:hover {
         box-shadow: 2px 2px 8px 3px rgba(1,1,1,0.5);
         color: #000;
-/*        background-color: #75ffd3;*/
-        background-color: #fff;
+        background-color: #75ffd3;
+/*        background-color: #fff;*/
     }
 
 .form-box .admin {
-/*    background-color: #ff5050;*/
     background-color: #ff6565;
     color: #000;
+    margin-top: 10px;
 }
 
     .form-box .admin:hover {
-        /*        background-color: #ff2626;*/
         background-color: #ff5050;
     }
 
-.form-box .employee {
+.form-box .lecturer {
     background-color: #cdcdcd;
     color: #000;
+    margin-top: 10px;
 }
 
-    .form-box .employee:hover {
+    .form-box .lecturer:hover {
         background-color: #e8e8e8;
     }
 
