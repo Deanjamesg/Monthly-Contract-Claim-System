@@ -9,7 +9,7 @@ namespace CMCS_Web_App.Models
         public int UserId { get; set; }
         public double ClaimAmount { get; set; }
         public double HourlyRate { get; set; }
-        public string ClaimStatus { get; set; }
+        public string ClaimStatus { get; set; } // Pending, Approved, Rejected, Paid
         public double HoursWorked { get; set; }
         public bool FlaggedClaim { get; set; }
         public string? FileName { get; set; } // Making FileName and FileData nullable.
