@@ -54,7 +54,7 @@ namespace CMCS_Web_App.Controllers
         {
             // https://learn.microsoft.com/en-us/ef/core/querying/
 
-            var claims = _context.Claims.Include(c => c.Lecturer).ToList();
+            var claims = _context.Claim.Include(c => c.Lecturer).ToList();
 
             return View(claims);
         }
@@ -63,7 +63,7 @@ namespace CMCS_Web_App.Controllers
         {
             // https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.firstordefault?view=net-8.0
 
-            var claim = _context.Claims.FirstOrDefault(c => c.ClaimId == Id);
+            var claim = _context.Claim.FirstOrDefault(c => c.ClaimId == Id);
 
             if (claim == null || claim.FileData == null)
             {
@@ -77,7 +77,7 @@ namespace CMCS_Web_App.Controllers
 
         public IActionResult ApproveClaim(int Id)
         {
-            var claim = _context.Claims.FirstOrDefault(c => c.ClaimId == Id);
+            var claim = _context.Claim.FirstOrDefault(c => c.ClaimId == Id);
 
             claim.ClaimStatus = "Approved";
 
@@ -88,7 +88,7 @@ namespace CMCS_Web_App.Controllers
 
         public IActionResult RejectClaim(int Id)
         {
-            var claim = _context.Claims.FirstOrDefault(c => c.ClaimId == Id);
+            var claim = _context.Claim.FirstOrDefault(c => c.ClaimId == Id);
 
             claim.ClaimStatus = "Rejected";
 
@@ -101,7 +101,7 @@ namespace CMCS_Web_App.Controllers
 
         public IActionResult TrackAllClaims()
         {
-            var claims = _context.Claims.Include(c => c.Lecturer).ToList();
+            var claims = _context.Claim.Include(c => c.Lecturer).ToList();
 
             return View(claims);
         }
