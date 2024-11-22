@@ -7,9 +7,10 @@ namespace CMCS_Web_App.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        DbSet<AcademicManager> AcademicManager { get; set; }
-        DbSet<ProgrammeCoordinator> ProgrammeCoordinator { get; set; }
-        DbSet<Lecturer> Lecturer { get; set; }
+        //DbSet<AcademicManager> AcademicManager { get; set; }
+        //DbSet<ProgrammeCoordinator> ProgrammeCoordinator { get; set; }
+        //DbSet<Lecturer> Lecturer { get; set; }
+        DbSet<User> User { get; set; }
         public DbSet<Claim> Claim { get; set; }
 
     }

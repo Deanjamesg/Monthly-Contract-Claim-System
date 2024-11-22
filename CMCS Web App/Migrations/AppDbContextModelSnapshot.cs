@@ -21,35 +21,6 @@ namespace CMCS_Web_App.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CMCS_Web_App.Models.AcademicManager", b =>
-                {
-                    b.Property<int>("AcademicManagerId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AcademicManagerId"));
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("AcademicManagerId");
-
-                    b.ToTable("AcademicManager");
-                });
-
             modelBuilder.Entity("CMCS_Web_App.Models.Claim", b =>
                 {
                     b.Property<int>("ClaimId")
@@ -66,12 +37,13 @@ namespace CMCS_Web_App.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("FileData")
-                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("FileName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("FlaggedClaim")
+                        .HasColumnType("bit");
 
                     b.Property<double>("HourlyRate")
                         .HasColumnType("float");
@@ -79,30 +51,29 @@ namespace CMCS_Web_App.Migrations
                     b.Property<double>("HoursWorked")
                         .HasColumnType("float");
 
-                    b.Property<int>("LecturerId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("ClaimId");
 
-                    b.HasIndex("LecturerId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Claim");
                 });
 
-            modelBuilder.Entity("CMCS_Web_App.Models.Lecturer", b =>
+            modelBuilder.Entity("CMCS_Web_App.Models.User", b =>
                 {
-                    b.Property<int>("LecturerId")
+                    b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LecturerId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Faculty")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
@@ -113,36 +84,7 @@ namespace CMCS_Web_App.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("LecturerId");
-
-                    b.ToTable("Lecturer");
-                });
-
-            modelBuilder.Entity("CMCS_Web_App.Models.ProgrammeCoordinator", b =>
-                {
-                    b.Property<int>("ProgrammeCoordinatorId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProgrammeCoordinatorId"));
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Faculty")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
+                    b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -150,23 +92,23 @@ namespace CMCS_Web_App.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ProgrammeCoordinatorId");
+                    b.HasKey("UserId");
 
-                    b.ToTable("ProgrammeCoordinator");
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("CMCS_Web_App.Models.Claim", b =>
                 {
-                    b.HasOne("CMCS_Web_App.Models.Lecturer", "Lecturer")
+                    b.HasOne("CMCS_Web_App.Models.User", "User")
                         .WithMany("Claims")
-                        .HasForeignKey("LecturerId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Lecturer");
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("CMCS_Web_App.Models.Lecturer", b =>
+            modelBuilder.Entity("CMCS_Web_App.Models.User", b =>
                 {
                     b.Navigation("Claims");
                 });
