@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CMCS_Web_App.Models.Claim>
+﻿@model IEnumerable<CMCS_Web_App.Models.UserClaim>
 
 @{
     ViewData["Title"] = "Review Claim";
@@ -27,20 +27,20 @@
                     @if (claim.ClaimStatus == "Pending")
                     {
                         <tr>
-                            <td>@claim.ClaimId</td>
+                            <td>@claim.UserClaimId</td>
                             <td>@claim.UserId</td>
                             <td>@claim.User.FirstName @claim.User.Surname</td>
                             <td>R @claim.ClaimAmount</td>
                             <td>@claim.HoursWorked Hrs</td>
                             <td>R @claim.HourlyRate / h</td>
-                            <td><a asp-controller="Home" asp-action="DownloadFile" asp-route-id="@claim.ClaimId">@claim.FileName</a></td>
+                            <td><a asp-controller="Home" asp-action="DownloadFile" asp-route-id="@claim.UserClaimId">@claim.FileName</a></td>
                             <td>
                                 <form asp-controller="Home" asp-action="ApproveClaim" method="post">
-                                    <input type="hidden" name="id" value="@claim.ClaimId" />
+                                    <input type="hidden" name="id" value="@claim.UserClaimId" />
                                     <button class="btn btn-accept" type="submit">Approve</button>
                                 </form>
                                 <form asp-controller="Home" asp-action="RejectClaim" method="post">
-                                    <input type="hidden" name="id" value="@claim.ClaimId" />
+                                    <input type="hidden" name="id" value="@claim.UserClaimId" />
                                     <button class="btn btn-reject" type="submit">Reject</button>
                                 </form>
                             </td>

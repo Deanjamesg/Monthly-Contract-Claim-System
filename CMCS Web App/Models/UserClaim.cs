@@ -2,10 +2,10 @@
 
 namespace CMCS_Web_App.Models
 {
-    public class Claim
+    public class UserClaim
     {
         [Key]
-        public int ClaimId { get; set; }
+        public int UserClaimId { get; set; }
         public int UserId { get; set; }
         public double ClaimAmount { get; set; }
         public double HourlyRate { get; set; }

@@ -14,6 +14,6 @@ namespace CMCS_Web_App.Models
         public string Password { get; set; }
         public string Role { get; set; } // Role is a string, as it will be used to store the role of the user.
 
-        public ICollection<Claim>? Claims { get; set; }
+        public ICollection<UserClaim>? Claims { get; set; }
     }
 }

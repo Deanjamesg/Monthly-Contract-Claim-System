@@ -11,7 +11,7 @@ namespace CMCS_Web_App.Data
         //DbSet<ProgrammeCoordinator> ProgrammeCoordinator { get; set; }
         //DbSet<Lecturer> Lecturer { get; set; }
         public DbSet<User> User { get; set; }
-        public DbSet<Claim> Claim { get; set; }
+        public DbSet<UserClaim> UserClaim { get; set; }
 
     }
 }
