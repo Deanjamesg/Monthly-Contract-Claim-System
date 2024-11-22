@@ -131,6 +131,29 @@ footer {
     border-radius: 15px;
     border: 2px solid rgba(255, 255, 255, .75);
 }
+.box .btn {
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    border: none;
+    background-color: #cdcdcd;
+    color: #000;
+    cursor: pointer;
+    transition: .3s;
+    width: 500px;
+    align-content: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.box .btn:hover {
+    box-shadow: 2px 2px 8px 3px rgba(1,1,1,0.5);
+    color: #000;
+    background-color: #75ffd3;
+}
 
 .page h1 {
     font-size: 36px;
@@ -229,7 +252,6 @@ footer {
         box-shadow: 2px 2px 8px 3px rgba(1,1,1,0.5);
         color: #000;
         background-color: #75ffd3;
-/*        background-color: #fff;*/
     }
 
 .form-box .admin {

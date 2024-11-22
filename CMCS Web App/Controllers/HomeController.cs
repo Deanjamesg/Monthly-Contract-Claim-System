@@ -54,7 +54,8 @@ namespace CMCS_Web_App.Controllers
         {
             // https://learn.microsoft.com/en-us/ef/core/querying/
 
-            var claims = _context.Claim.Include(c => c.User).ToList();
+            // Null-coalescing Operator
+            var claims = _context.Claim.Include(c => c.User).ToList() ?? new List<Claim>();
 
             return View(claims);
         }
@@ -143,6 +144,7 @@ namespace CMCS_Web_App.Controllers
                 if (!fileTypes.Any(type => fileName.EndsWith(type, StringComparison.OrdinalIgnoreCase)))
                 {
                     TempData["SubmitClaimFailed"] = "Please submit a file type of one of the following: .pdf / .docx / .png / .jpg";
+
                     return View("CreateClaim");
                 }
 
@@ -174,6 +176,53 @@ namespace CMCS_Web_App.Controllers
                 return View("CreateClaim");
             }
 
+        }
+
+        //-----------------------------------------------------------------------------------
+
+        // Button on Index view to create samples of Users, making it easier for testing the application. ONLY PRESS ONCE.
+        public IActionResult CreateUserSamples()
+        {
+            // Creating a list of User objects, all administrators.
+
+            var users = new List<User>
+            {
+                new User
+                {
+                    FirstName = "John",
+                    Surname = "Doe",
+                    Email = "programme@example.com",
+                    ContactNumber = "0792317568",
+                    Faculty = "Science",
+                    Password = "Admin",
+                    Role = "ProgrammeCoordinator"
+                },
+                new User
+                {
+                    FirstName = "Dean",
+                    Surname = "James",
+                    Email = "academic@example.com",
+                    ContactNumber = "0823418964",
+                    Password = "Admin",
+                    Role = "AcademicManager"
+                },
+                new User
+                {
+                    FirstName = "Liam",
+                    Surname = "Knipe",
+                    Email = "hr@example.com",
+                    ContactNumber = "0725143329",
+                    Password = "Admin",
+                    Role = "HR"
+                }
+            };
+
+            // Inserting a collection of entities into the database in a single call.
+            _context.User.AddRange(users);
+
+            _context.SaveChanges();
+
+            return RedirectToAction("ReviewClaim", "Home");
         }
 
         //-----------------------------------------------------------------------------------
