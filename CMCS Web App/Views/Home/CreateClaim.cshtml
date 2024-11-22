@@ -9,37 +9,65 @@
             <h1>Submit a Claim</h1>
             <p>Please enter in all the required details.</p>
 
-            <form asp-controller="Home" asp-action="SubmitNewClaim" method="post" enctype="multipart/form-data">
+            @if ((int)TempData["AccessLevel"] != 1)
+            {
+                <div class="alert alert-warning">
+                    Only lecturers may submit claims.
+                </div>
 
                 <div class="input-box">
-                    <input type="number" asp-for="ClaimAmount" required />
                     <label>Claim Amount</label>
                 </div>
 
                 <div class="input-box">
-                    <input type="number" asp-for="HoursWorked" required />
                     <label>Hours Worked</label>
                 </div>
 
                 <div class="input-box">
-                    <input type="number" asp-for="HourlyRate" required />
                     <label>Hourly Rate</label>
                 </div>
 
                 <p class="file">Please upload any supporting documents. </p>
                 <p>Valid file types: .pdf / .docx / .png / .jpg</p>
-                <input type="file" name="file" required/>
-                
+                <input type="file" name="file" disabled />
 
-                <button class="btn" type="submit">Submit Claim</button>
 
-                @if (TempData["SubmitClaimFailed"] != null)
-                {
-                    <div class="alert alert-danger">
-                        @TempData["SubmitClaimFailed"]
+                <button class="btn" disabled >Submit Claim</button>
+            }
+            else
+            {
+                <form asp-controller="Home" asp-action="SubmitNewClaim" method="post" enctype="multipart/form-data">
+
+                    <div class="input-box">
+                        <input type="number" asp-for="ClaimAmount" required />
+                        <label>Claim Amount</label>
                     </div>
-                }
-            </form>
+
+                    <div class="input-box">
+                        <input type="number" asp-for="HoursWorked" required />
+                        <label>Hours Worked</label>
+                    </div>
+
+                    <div class="input-box">
+                        <input type="number" asp-for="HourlyRate" required />
+                        <label>Hourly Rate</label>
+                    </div>
+
+                    <p class="file">Please upload any supporting documents. </p>
+                    <p>Valid file types: .pdf / .docx / .png / .jpg</p>
+                    <input type="file" name="file" required />
+
+
+                    <button class="btn" type="submit">Submit Claim</button>
+
+                    @if (TempData["SubmitClaimFailed"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            @TempData["SubmitClaimFailed"]
+                        </div>
+                    }
+                </form>
+            }
 
         </div>
     </div>

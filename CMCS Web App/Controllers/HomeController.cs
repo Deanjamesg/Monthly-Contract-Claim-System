@@ -39,6 +39,33 @@ namespace CMCS_Web_App.Controllers
 
         //-----------------------------------------------------------------------------------
 
+        private int CheckAccessLevel()
+        {
+            int accessLevel = 0;
+
+            switch (GetUserInSession().Role)
+            {
+                case "Lecturer":
+                    accessLevel = 1;
+                    break;
+                case "ProgrammeCoordinator":
+                    accessLevel = 2;
+                    break;
+                case "AcademicManager":
+                    accessLevel = 2;
+                    break;
+                case "HR":
+                    accessLevel = 3;
+                    break;
+                default:
+                    accessLevel = 0;
+                    break;
+            }
+            return accessLevel;
+        }
+
+        //-----------------------------------------------------------------------------------
+
         private bool IsUserLoggedIn()
         {
             int? userID = _httpContextAccessor.HttpContext.Session.GetInt32("UserID");
@@ -57,10 +84,11 @@ namespace CMCS_Web_App.Controllers
             {
                 _httpContextAccessor.HttpContext.Session.SetInt32("UserID", user.UserId);
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Account");
             }
 
             TempData["Error"] = "Invalid login attempt.";
+
             return View();
         }
 
@@ -75,7 +103,7 @@ namespace CMCS_Web_App.Controllers
 
             _httpContextAccessor.HttpContext.Session.Remove("UserID");
 
-            return RedirectToAction("Login", "Home");
+            return RedirectToAction("Login");
         }
 
         //-----------------------------------------------------------------------------------
@@ -89,7 +117,11 @@ namespace CMCS_Web_App.Controllers
 
         public IActionResult Login()
         {
-            return View();
+            if (!IsUserLoggedIn())
+            {
+                return View();
+            }
+            return View("Account");
         }
 
         //-----------------------------------------------------------------------------------
@@ -100,6 +132,8 @@ namespace CMCS_Web_App.Controllers
             {
                 return RedirectToAction("Login");
             }
+
+            TempData["AccessLevel"] = CheckAccessLevel();
 
             return View();
         }
@@ -113,12 +147,14 @@ namespace CMCS_Web_App.Controllers
                 return RedirectToAction("Login");
             }
 
+            TempData["AccessLevel"] = CheckAccessLevel();
+
             return View();
         }
 
         //-----------------------------------------------------------------------------------
 
-        public IActionResult Profile()
+        public IActionResult Account()
         {
             if (!IsUserLoggedIn())
             {
@@ -142,6 +178,8 @@ namespace CMCS_Web_App.Controllers
             // Null-coalescing Operator
             var claims = _context.UserClaim.Include(c => c.User).ToList() ?? new List<UserClaim>();
 
+            TempData["AccessLevel"] = CheckAccessLevel();
+
             return View(claims);
         }
 
@@ -155,8 +193,6 @@ namespace CMCS_Web_App.Controllers
             {
                 return NotFound();
             }
-
-            //https://learn.microsoft.com/en-us/dotnet/api/system.web.mvc.filecontentresult?view=aspnet-mvc-5.2
 
             return File(claim.FileData, "application/octet-stream", claim.FileName);
         }
@@ -196,7 +232,19 @@ namespace CMCS_Web_App.Controllers
                 return RedirectToAction("Login");
             }
 
-            var claims = _context.UserClaim.Include(c => c.User).ToList();
+            var claims = new List<UserClaim>();
+
+            int _accessLvl = CheckAccessLevel();
+
+            // Check to see if the user logged in is an administrator before populating the list of all claims.
+            if (_accessLvl > 1)
+            {
+                claims = _context.UserClaim.Include(c => c.User).ToList();
+
+                return View(claims);
+            }
+
+            TempData["AccessLevel"] = _accessLvl;
 
             return View(claims);
         }
@@ -217,13 +265,12 @@ namespace CMCS_Web_App.Controllers
                 return View("Register");
             }
 
+            TempData["AccessLevel"] = CheckAccessLevel();
 
-            return RedirectToAction("Login", "Home");
+            return RedirectToAction("Login");
         }
 
         //-----------------------------------------------------------------------------------
-
-        //https://learn.microsoft.com/en-us/aspnet/core/mvc/models/file-uploads?view=aspnetcore-8.0
 
         [HttpPost]
         public async Task<IActionResult> SubmitNewClaim(UserClaim claim, IFormFile file)
@@ -290,6 +337,17 @@ namespace CMCS_Web_App.Controllers
 
             // UNCOMMENT THIS FOR TESTING PURPOSES
 
+            //var user = new User
+            //{
+            //    FirstName = "Nicholas",
+            //    Surname = "Cage",
+            //    Email = "lecturer@example.com",
+            //    ContactNumber = "0792317568",
+            //    Faculty = "Engineering",
+            //    Password = "Lecturer",
+            //    Role = "Lecturer"
+            //};
+
             //var users = new List<User>
             //{
             //    new User
@@ -319,6 +377,16 @@ namespace CMCS_Web_App.Controllers
             //        ContactNumber = "0725143329",
             //        Password = "Admin",
             //        Role = "HR"
+            //    },
+            //    new User
+            //    {
+            //        FirstName = "Nicholas",
+            //        Surname = "Cage",
+            //        Email = "lecturer@example.com",
+            //        ContactNumber = "0792317568",
+            //        Faculty = "Engineering",
+            //        Password = "Lecturer",
+            //        Role = "Lecturer"
             //    }
             //};
 
@@ -327,10 +395,78 @@ namespace CMCS_Web_App.Controllers
 
             //_context.SaveChanges();
 
-            return RedirectToAction("ReviewClaim", "Home");
+            return RedirectToAction("ReviewClaim");
         }
 
         //-----------------------------------------------------------------------------------
+
+        // Buttons from Login page to make testing the various roles easier.
+
+        public async Task<IActionResult> LoginProgrammeCoordinator()
+        {
+            var user = await _context.User.FirstOrDefaultAsync(u => u.Email == "programme@example.com" && u.Password == "Admin");
+
+            if (user != null)
+            {
+                _httpContextAccessor.HttpContext.Session.SetInt32("UserID", user.UserId);
+
+                return RedirectToAction("Account");
+            }
+
+            TempData["Error"] = "Invalid login attempt.";
+
+            return View("Login");
+        }
+
+        public async Task<IActionResult> LoginAcademicManager()
+        {
+            var user = await _context.User.FirstOrDefaultAsync(u => u.Email == "academic@example.com" && u.Password == "Admin");
+
+            if (user != null)
+            {
+                _httpContextAccessor.HttpContext.Session.SetInt32("UserID", user.UserId);
+
+                return RedirectToAction("Account");
+            }
+
+            TempData["Error"] = "Failed login attempt.";
+
+            return View("Login");
+        }
+
+        public async Task<IActionResult> LoginHR()
+        {
+            var user = await _context.User.FirstOrDefaultAsync(u => u.Email == "hr@example.com" && u.Password == "Admin");
+
+            if (user != null)
+            {
+                _httpContextAccessor.HttpContext.Session.SetInt32("UserID", user.UserId);
+
+                return RedirectToAction("Account");
+            }
+
+            TempData["Error"] = "Failed login attempt.";
+
+            return View("Login");
+        }
+
+        public async Task<IActionResult> LoginLecturer()
+        {
+            var user = await _context.User.FirstOrDefaultAsync(u => u.Email == "lecturer@example.com" && u.Password == "Lecturer");
+
+            if (user != null)
+            {
+                _httpContextAccessor.HttpContext.Session.SetInt32("UserID", user.UserId);
+
+                return RedirectToAction("Account");
+            }
+
+            TempData["Error"] = "Failed login attempt.";
+
+            return View("Login");
+        }
+
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

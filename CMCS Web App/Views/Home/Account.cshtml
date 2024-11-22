@@ -1,14 +1,14 @@
 ﻿@model CMCS_Web_App.Models.User;
 @{
-    ViewData["Title"] = "Profile";
+    ViewData["Title"] = "Account";
 }
 
 <div class="page">
     <div class="wrapper">
         <div class="form-box">
-            <h1>Profile</h1>
-            <p>Update your profile details.</p>
-            <form asp-controller="Home" asp-action="Profile" method="post">
+            <h1>Account</h1>
+            <p>These are your current account details.</p>
+            <p>Please contact an HR to make changes.</p>
                 <div class="input-box">
                     <input type="text" name="FirstName" value="@Model.FirstName" required />
                     <label>First Name</label>
@@ -20,7 +20,7 @@
                 </div>
 
                 <div class="input-box">
-                    <input type="email" name="Email" value="@Model.Email" required />
+                    <input type="email" name="Email" value="@Model.Email" readonly />
                     <label>Email</label>
                 </div>
 
@@ -37,7 +37,6 @@
                         @TempData["UpdateFailed"]
                     </div>
                 }
-            </form>
         </div>
     </div>
 </div>

@@ -5,11 +5,20 @@
 <div class="page">
     <div class="wrapper">
         <div class="form-box">
-            <h1>Staff Role</h1>
+            <h1>Staff Roles</h1>
             <p>Please select your staff position.</p>
-            <button class="btn admin" type="submit">Academic Manager</button>
-            <button class="btn admin" type="submit">Programme Coordinator</button>
-            <button class="btn lecturer" type="submit">Lecturer</button>
+            <form asp-controller="Home" asp-action="LoginProgrammeCoordinator" method="post">
+                <button class="btn admin" type="submit">Programme Coordinator</button>
+            </form>
+            <form asp-controller="Home" asp-action="LoginAcademicManager" method="post">
+                <button class="btn admin" type="submit">Academic Manager</button>
+            </form>
+            <form asp-controller="Home" asp-action="LoginHR" method="post">
+                <button class="btn admin" type="submit">Human Resources</button>
+            </form>
+            <form asp-controller="Home" asp-action="LoginLecturer" method="post">
+                <button class="btn lecturer" type="submit">Lecturer</button>
+            </form>
         </div>
         <div class="form-box">
             <h1>Login</h1>
