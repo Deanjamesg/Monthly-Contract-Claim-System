@@ -13,18 +13,43 @@
         </div>
         <div class="form-box">
             <h1>Login</h1>
-            <div class="input-box">
-                <input type="text" required />
-                <label>Username</label>
-            </div>
+            <form asp-controller="Home" asp-action="Login" method="post">
+                <div class="input-box">
+                    <input type="email" name="Email" required />
+                    <label>Email</label>
+                </div>
 
-            <div class="input-box">
-                <input type="password" required />
-                <label>Password</label>
-            </div>
+                <div class="input-box">
+                    <input type="password" name="Password" required />
+                    <label>Password</label>
+                </div>
 
-            <button class="btn" type="submit">Login</button>
+                <button class="btn" type="submit">Login</button>
 
+                @if (TempData["LoginFailed"] != null)
+                {
+                    <div class="alert alert-danger">
+                        @TempData["LoginFailed"]
+                    </div>
+                }
+            </form>
         </div>
+    </div>
+    <div class="admin-details">
+        <h1>Admin Login Details</h1>
+
+        <h2>Programmme Co-Ordinator</h2>
+        <p>Email: programme@example.com</p>
+        <p>Password: Admin</p>
+        <hr>
+    
+        <h2>Academic Manager</h2>
+        <p>Email: academic@example.com</p>
+        <p>Password: Admin</p>
+        <hr>
+
+        <h2>Human Resources</h2>
+        <p>Email: hr@example.com</p>
+        <p>Password: Admin</p>
     </div>
 </div>

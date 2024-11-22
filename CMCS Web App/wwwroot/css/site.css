@@ -155,12 +155,46 @@ footer {
     background-color: #75ffd3;
 }
 
-.page h1 {
-    font-size: 36px;
-    margin-bottom: 20px;
-    /*    color: #75ffd3;*/
-    color: #fff;
+.admin-details {
+    display: flex;
+    background-color: rgba(15, 15, 15, 0.8);
+    backdrop-filter: blur(3px);
+    flex-direction: column;
+    justify-content: center;
+    width: 500px;
+    padding: 30px;
+    margin: 10px;
+    border-radius: 15px;
+    border: 2px solid rgba(255, 255, 255, .75);
 }
+
+    .admin-details h1 {
+        font-size: 36px;
+        margin-bottom: 20px;
+        color: #fff;
+    }
+
+    .admin-details h2 {
+        font-size: 18px;
+        margin-bottom: 5px;
+        color: #ff6565;
+    }
+
+    .admin-details p {
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+    .admin-details hr {
+        color: transparent;
+        margin: 10px;
+    }
+
+    .page h1 {
+        font-size: 28px;
+        margin-bottom: 20px;
+        /*    color: #75ffd3;*/
+        color: #fff;
+    }
 
 .form-box {
     display: flex;

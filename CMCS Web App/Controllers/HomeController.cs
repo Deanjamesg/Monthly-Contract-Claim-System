@@ -1,8 +1,11 @@
 using CMCS_Web_App.Data;
 using CMCS_Web_App.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace CMCS_Web_App.Controllers
 {
@@ -16,6 +19,45 @@ namespace CMCS_Web_App.Controllers
         {
             _logger = logger;
             _context = context;
+        }
+
+        //-----------------------------------------------------------------------------------
+
+        [HttpPost]
+        public async Task<IActionResult> Login(string email, string password)
+        {
+            var user = await _context.User.FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
+
+            if (user != null)
+            {
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+                    new Claim(ClaimTypes.Name, user.Email),
+                    new Claim(ClaimTypes.Role, user.Role)
+                };
+
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                var authProperties = new AuthenticationProperties
+                {
+                    IsPersistent = true
+                };
+
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
+
+                return RedirectToAction("Index", "Home");
+            }
+
+            TempData["Error"] = "Invalid login attempt.";
+
+            return View();
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login", "Home");
         }
 
         //-----------------------------------------------------------------------------------
@@ -55,7 +97,7 @@ namespace CMCS_Web_App.Controllers
             // https://learn.microsoft.com/en-us/ef/core/querying/
 
             // Null-coalescing Operator
-            var claims = _context.Claim.Include(c => c.User).ToList() ?? new List<Claim>();
+            var claims = _context.UserClaim.Include(c => c.User).ToList() ?? new List<UserClaim>();
 
             return View(claims);
         }
@@ -64,7 +106,7 @@ namespace CMCS_Web_App.Controllers
         {
             // https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.firstordefault?view=net-8.0
 
-            var claim = _context.Claim.FirstOrDefault(c => c.UserId == Id);
+            var claim = _context.UserClaim.FirstOrDefault(c => c.UserId == Id);
 
             if (claim == null || claim.FileData == null)
             {
@@ -78,7 +120,7 @@ namespace CMCS_Web_App.Controllers
 
         public IActionResult ApproveClaim(int Id)
         {
-            var claim = _context.Claim.FirstOrDefault(c => c.ClaimId == Id);
+            var claim = _context.UserClaim.FirstOrDefault(c => c.UserClaimId == Id);
 
             claim.ClaimStatus = "Approved";
 
@@ -89,7 +131,7 @@ namespace CMCS_Web_App.Controllers
 
         public IActionResult RejectClaim(int Id)
         {
-            var claim = _context.Claim.FirstOrDefault(c => c.ClaimId == Id);
+            var claim = _context.UserClaim.FirstOrDefault(c => c.UserClaimId == Id);
 
             claim.ClaimStatus = "Rejected";
 
@@ -102,7 +144,7 @@ namespace CMCS_Web_App.Controllers
 
         public IActionResult TrackAllClaims()
         {
-            var claims = _context.Claim.Include(c => c.User).ToList();
+            var claims = _context.UserClaim.Include(c => c.User).ToList();
 
             return View(claims);
         }
@@ -132,7 +174,7 @@ namespace CMCS_Web_App.Controllers
         //https://learn.microsoft.com/en-us/aspnet/core/mvc/models/file-uploads?view=aspnetcore-8.0
 
         [HttpPost]
-        public async Task<IActionResult> SubmitNewClaim(Claim claim, IFormFile file)
+        public async Task<IActionResult> SubmitNewClaim(UserClaim claim, IFormFile file)
         {
             if (file != null && file.Length > 0)
             {
@@ -185,42 +227,44 @@ namespace CMCS_Web_App.Controllers
         {
             // Creating a list of User objects, all administrators.
 
-            var users = new List<User>
-            {
-                new User
-                {
-                    FirstName = "John",
-                    Surname = "Doe",
-                    Email = "programme@example.com",
-                    ContactNumber = "0792317568",
-                    Faculty = "Science",
-                    Password = "Admin",
-                    Role = "ProgrammeCoordinator"
-                },
-                new User
-                {
-                    FirstName = "Dean",
-                    Surname = "James",
-                    Email = "academic@example.com",
-                    ContactNumber = "0823418964",
-                    Password = "Admin",
-                    Role = "AcademicManager"
-                },
-                new User
-                {
-                    FirstName = "Liam",
-                    Surname = "Knipe",
-                    Email = "hr@example.com",
-                    ContactNumber = "0725143329",
-                    Password = "Admin",
-                    Role = "HR"
-                }
-            };
+            // UNCOMMENT THIS FOR TESTING PURPOSES
 
-            // Inserting a collection of entities into the database in a single call.
-            _context.User.AddRange(users);
+            //var users = new List<User>
+            //{
+            //    new User
+            //    {
+            //        FirstName = "John",
+            //        Surname = "Doe",
+            //        Email = "programme@example.com",
+            //        ContactNumber = "0792317568",
+            //        Faculty = "Science",
+            //        Password = "Admin",
+            //        Role = "ProgrammeCoordinator"
+            //    },
+            //    new User
+            //    {
+            //        FirstName = "Dean",
+            //        Surname = "James",
+            //        Email = "academic@example.com",
+            //        ContactNumber = "0823418964",
+            //        Password = "Admin",
+            //        Role = "AcademicManager"
+            //    },
+            //    new User
+            //    {
+            //        FirstName = "Liam",
+            //        Surname = "Knipe",
+            //        Email = "hr@example.com",
+            //        ContactNumber = "0725143329",
+            //        Password = "Admin",
+            //        Role = "HR"
+            //    }
+            //};
 
-            _context.SaveChanges();
+            //// Inserting a collection of entities into the database in a single call.
+            //_context.User.AddRange(users);
+
+            //_context.SaveChanges();
 
             return RedirectToAction("ReviewClaim", "Home");
         }
