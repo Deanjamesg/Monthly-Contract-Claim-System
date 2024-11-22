@@ -10,11 +10,6 @@
             <p>Please enter in all the required details.</p>
 
             <form asp-controller="Home" asp-action="SubmitNewClaim" method="post" enctype="multipart/form-data">
-                
-                <div class="input-box">
-                    <input type="number" asp-for="UserId" required />
-                    <label>Lecturer ID</label>
-                </div>
 
                 <div class="input-box">
                     <input type="number" asp-for="ClaimAmount" required />

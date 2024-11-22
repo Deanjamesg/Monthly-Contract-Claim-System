@@ -1,24 +1,49 @@
 using CMCS_Web_App.Data;
 using CMCS_Web_App.Models;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace CMCS_Web_App.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
         private readonly AppDbContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public HomeController(ILogger<HomeController> logger, AppDbContext context)
+        //-----------------------------------------------------------------------------------
+
+        public HomeController(ILogger<HomeController> logger, AppDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
+        }
+
+        //-----------------------------------------------------------------------------------
+
+        private User GetUserInSession()
+        {
+            int? userID = _httpContextAccessor.HttpContext.Session.GetInt32("UserID");
+
+            if (userID.HasValue)
+            {
+                return _context.User.Find(userID.Value);
+            }
+
+            return null;
+        }
+
+        //-----------------------------------------------------------------------------------
+
+        private bool IsUserLoggedIn()
+        {
+            int? userID = _httpContextAccessor.HttpContext.Session.GetInt32("UserID");
+
+            return userID.HasValue;
         }
 
         //-----------------------------------------------------------------------------------
@@ -30,33 +55,26 @@ namespace CMCS_Web_App.Controllers
 
             if (user != null)
             {
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-                    new Claim(ClaimTypes.Name, user.Email),
-                    new Claim(ClaimTypes.Role, user.Role)
-                };
-
-                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-                var authProperties = new AuthenticationProperties
-                {
-                    IsPersistent = true
-                };
-
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
+                _httpContextAccessor.HttpContext.Session.SetInt32("UserID", user.UserId);
 
                 return RedirectToAction("Index", "Home");
             }
 
             TempData["Error"] = "Invalid login attempt.";
-
             return View();
         }
 
-        public async Task<IActionResult> Logout()
+        //-----------------------------------------------------------------------------------
+
+        public IActionResult Logout()
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            if (!IsUserLoggedIn())
+            {
+                return RedirectToAction("Login");
+            }
+
+            _httpContextAccessor.HttpContext.Session.Remove("UserID");
+
             return RedirectToAction("Login", "Home");
         }
 
@@ -78,6 +96,11 @@ namespace CMCS_Web_App.Controllers
 
         public IActionResult Register()
         {
+            if (!IsUserLoggedIn())
+            {
+                return RedirectToAction("Login");
+            }
+
             return View();
         }
 
@@ -85,7 +108,24 @@ namespace CMCS_Web_App.Controllers
 
         public IActionResult CreateClaim()
         {
+            if (!IsUserLoggedIn())
+            {
+                return RedirectToAction("Login");
+            }
+
             return View();
+        }
+
+        //-----------------------------------------------------------------------------------
+
+        public IActionResult Profile()
+        {
+            if (!IsUserLoggedIn())
+            {
+                return RedirectToAction("Login");
+            }
+
+            return View(GetUserInSession());
         }
 
         //-----------------------------------------------------------------------------------
@@ -94,7 +134,10 @@ namespace CMCS_Web_App.Controllers
 
         public IActionResult ReviewClaim()
         {
-            // https://learn.microsoft.com/en-us/ef/core/querying/
+            if (!IsUserLoggedIn())
+            {
+                return RedirectToAction("Login");
+            }
 
             // Null-coalescing Operator
             var claims = _context.UserClaim.Include(c => c.User).ToList() ?? new List<UserClaim>();
@@ -102,10 +145,10 @@ namespace CMCS_Web_App.Controllers
             return View(claims);
         }
 
+        //-----------------------------------------------------------------------------------
+
         public IActionResult DownloadFile(int Id)
         {
-            // https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.firstordefault?view=net-8.0
-
             var claim = _context.UserClaim.FirstOrDefault(c => c.UserId == Id);
 
             if (claim == null || claim.FileData == null)
@@ -118,6 +161,8 @@ namespace CMCS_Web_App.Controllers
             return File(claim.FileData, "application/octet-stream", claim.FileName);
         }
 
+        //-----------------------------------------------------------------------------------
+
         public IActionResult ApproveClaim(int Id)
         {
             var claim = _context.UserClaim.FirstOrDefault(c => c.UserClaimId == Id);
@@ -128,6 +173,8 @@ namespace CMCS_Web_App.Controllers
 
             return RedirectToAction("ReviewClaim");
         }
+
+        //-----------------------------------------------------------------------------------
 
         public IActionResult RejectClaim(int Id)
         {
@@ -144,6 +191,11 @@ namespace CMCS_Web_App.Controllers
 
         public IActionResult TrackAllClaims()
         {
+            if (!IsUserLoggedIn())
+            {
+                return RedirectToAction("Login");
+            }
+
             var claims = _context.UserClaim.Include(c => c.User).ToList();
 
             return View(claims);
@@ -176,6 +228,11 @@ namespace CMCS_Web_App.Controllers
         [HttpPost]
         public async Task<IActionResult> SubmitNewClaim(UserClaim claim, IFormFile file)
         {
+            if (!IsUserLoggedIn())
+            {
+                return RedirectToAction("Login");
+            }
+
             if (file != null && file.Length > 0)
             {
                 var fileName = Path.GetFileName(file.FileName);
@@ -199,6 +256,10 @@ namespace CMCS_Web_App.Controllers
                     claim.FileData = memoryStream.ToArray();
                 }
             }
+
+            int? userID = _httpContextAccessor.HttpContext.Session.GetInt32("UserID");
+
+            claim.UserId = userID.Value;
 
             claim.FlaggedClaim = false;
 
