@@ -14,7 +14,7 @@
                 <div class="alert alert-warning">
                     Only lecturers may submit claims.
                 </div>
-
+                    
                 <div class="input-box">
                     <label>Claim Amount</label>
                 </div>
@@ -31,15 +31,18 @@
                 <p>Valid file types: .pdf / .docx / .png / .jpg</p>
                 <input type="file" name="file" disabled />
 
-
                 <button class="btn" disabled >Submit Claim</button>
             }
             else
             {
                 <form asp-controller="Home" asp-action="SubmitNewClaim" method="post" enctype="multipart/form-data">
 
-                    <div class="input-box">
-                        <input type="number" asp-for="ClaimAmount" required />
+                    <div class="input-box-static">
+                        <input type="number" asp-for="UserId" value="@TempData["UserId"]" readonly />
+                        <label>User ID</label>
+                    </div>
+                    <div class="input-box-static">
+                        <input type="text" asp-for="ClaimAmount" value="R" readonly />
                         <label>Claim Amount</label>
                     </div>
 
@@ -54,9 +57,8 @@
                     </div>
 
                     <p class="file">Please upload any supporting documents. </p>
-                    <p>Valid file types: .pdf / .docx / .png / .jpg</p>
+                    <p>File types ( .pdf / .docx / .png / .jpg )</p>
                     <input type="file" name="file" required />
-
 
                     <button class="btn" type="submit">Submit Claim</button>
 
@@ -68,7 +70,21 @@
                     }
                 </form>
             }
-
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            function calculateClaimAmount() {
+                var hoursWorked = parseFloat($('#HoursWorked').val()) || 0;
+                var hourlyRate = parseFloat($('#HourlyRate').val()) || 0;
+                var claimAmount = hoursWorked * hourlyRate;
+                $('#ClaimAmount').val('R ' + claimAmount.toFixed(2));
+            }
+            $('#HoursWorked, #HourlyRate').on('input', calculateClaimAmount);
+        });
+    </script>
+}

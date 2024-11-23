@@ -5,38 +5,39 @@
 
 <div class="page">
     <div class="wrapper">
-        <div class="form-box">
-            <h1>Account</h1>
-            <p>These are your current account details.</p>
-            <p>Please contact an HR to make changes.</p>
-                <div class="input-box">
-                    <input type="text" name="FirstName" value="@Model.FirstName" required />
-                    <label>First Name</label>
-                </div>
-
-                <div class="input-box">
-                    <input type="text" name="LastName" value="@Model.Surname" required />
-                    <label>Last Name</label>
-                </div>
-
-                <div class="input-box">
-                    <input type="email" name="Email" value="@Model.Email" readonly />
-                    <label>Email</label>
-                </div>
-
-                <div class="input-box">
-                    <input type="password" name="Password" required />
-                    <label>Password</label>
-                </div>
-
-                <button class="btn" type="submit">Update</button>
-
-                @if (TempData["UpdateFailed"] != null)
-                {
-                    <div class="alert alert-danger">
-                        @TempData["UpdateFailed"]
-                    </div>
-                }
+        <div class="details-box">
+            <h1>Account Details</h1>
+            <p>Contact a HR to make changes.</p>
+            <div class="input-box-static">
+                <input type="text" value="@Model.FirstName" readonly />
+                <label>First Name</label>
+            </div>
+            <div class="input-box-static">
+                <input type="text" value="@Model.Surname" readonly />
+                <label>Last Name</label>
+            </div>
+            <div class="input-box-static">
+                <input type="email" value="@Model.Email" readonly />
+                <label>Email</label>
+            </div>
+            <div class="input-box-static">
+                <input type="text" value="@Model.ContactNumber" readonly />
+                <label>Contact Number</label>
+            </div>
+            <div class="input-box-static">
+                <input type="text" value="@Model.Role" readonly />
+                <label>Role</label>
+            </div>
+            @if (@Model.Faculty != null) {
+            <div class="input-box-static">
+                <input type="text" value="@Model.Faculty" readonly />
+                <label>Faculty</label>
+            </div>
+            }
+            <div class="input-box-static">
+                <input type="text" value="@Model.Password" readonly />
+                <label>Password</label>
+            </div>
         </div>
     </div>
 </div>

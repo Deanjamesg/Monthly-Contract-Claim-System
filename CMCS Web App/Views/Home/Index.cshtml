@@ -24,6 +24,18 @@
     </div>
 
     <div class="box">
+        @if (TempData["UsersExist"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["UsersExist"]
+            </div>
+        }
+        @if (TempData["UsersCreated"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["UsersCreated"]
+            </div>
+        }
         <form asp-controller="Home" asp-action="CreateUserSamples">
             <button class="btn" type="submit">Create Users</button>
         </form>

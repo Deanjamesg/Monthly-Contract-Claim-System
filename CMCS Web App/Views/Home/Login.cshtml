@@ -2,11 +2,21 @@
     ViewData["Title"] = "Login";
 }
 
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
 <div class="page">
     <div class="wrapper">
         <div class="form-box">
             <h1>Staff Roles</h1>
-            <p>Please select your staff position.</p>
+            <p>These buttons have been added, to test the various Roles.  
+               The data for these roles is displayed to the right by the "User Login Details" title.
+            </p>
+            <p>If these buttons do not work, please ensure you have pressed the 'Create Users' button on the home page.</p>
             <form asp-controller="Home" asp-action="LoginProgrammeCoordinator" method="post">
                 <button class="btn admin" type="submit">Programme Coordinator</button>
             </form>
@@ -19,6 +29,28 @@
             <form asp-controller="Home" asp-action="LoginLecturer" method="post">
                 <button class="btn lecturer" type="submit">Lecturer</button>
             </form>
+        </div>
+        <div class="admin-details">
+            <h1>User Login Details</h1>
+
+            <h2>Programmme Co-Ordinator</h2>
+            <p>Email: programme@example.com</p>
+            <p>Password: Admin</p>
+            <hr>
+
+            <h2>Academic Manager</h2>
+            <p>Email: academic@example.com</p>
+            <p>Password: Admin</p>
+            <hr>
+
+            <h2>Human Resources</h2>
+            <p>Email: hr@example.com</p>
+            <p>Password: Admin</p>
+            <hr>
+
+            <h2>Lecturer</h2>
+            <p>Email: lecturer@example.com</p>
+            <p>Password: Lecturer</p>
         </div>
         <div class="form-box">
             <h1>Login</h1>
@@ -33,32 +65,15 @@
                     <label>Password</label>
                 </div>
 
-                <button class="btn" type="submit">Login</button>
-
                 @if (TempData["LoginFailed"] != null)
                 {
                     <div class="alert alert-danger">
                         @TempData["LoginFailed"]
                     </div>
                 }
+
+                <button class="btn" type="submit">Login</button>
             </form>
         </div>
-    </div>
-    <div class="admin-details">
-        <h1>Admin Login Details</h1>
-
-        <h2>Programmme Co-Ordinator</h2>
-        <p>Email: programme@example.com</p>
-        <p>Password: Admin</p>
-        <hr>
-    
-        <h2>Academic Manager</h2>
-        <p>Email: academic@example.com</p>
-        <p>Password: Admin</p>
-        <hr>
-
-        <h2>Human Resources</h2>
-        <p>Email: hr@example.com</p>
-        <p>Password: Admin</p>
     </div>
 </div>
