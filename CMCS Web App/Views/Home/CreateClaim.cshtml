@@ -3,29 +3,18 @@
     ViewData["Title"] = "Create Claim";
 }
 
-@if ((int)TempData["AccessLevel"] != 1)
-{
-    <div class="alert alert-danger">
-        Only lecturers may submit claims.
-    </div>
-}
-
 <div class="page">
     <div class="wrapper">
         <div class="form-box">
             <h1>Submit a Claim</h1>
-            <p>Please enter in all the required details.</p>
             @if ((int)TempData["AccessLevel"] == 1)
             {
+                <p>Please enter in all the required details.</p>
                 <form asp-controller="Home" asp-action="SubmitNewClaim" method="post" enctype="multipart/form-data">
 
                     <div class="input-box-static">
                         <input type="number" asp-for="UserId" value="@TempData["UserId"]" readonly required/>
                         <label>User ID</label>
-                    </div>
-                    <div class="input-box-static">
-                        <input type="text" asp-for="ClaimAmount" value="R" readonly required/>
-                        <label>Claim Amount</label>
                     </div>
 
                     <div class="input-box">
@@ -36,6 +25,11 @@
                     <div class="input-box">
                         <input type="number" asp-for="HourlyRate" required />
                         <label>Hourly Rate</label>
+                    </div>
+
+                    <div class="input-box-static">
+                        <input type="text" name="ClaimAmount" id="ClaimAmount" value="R" readonly required />
+                        <label>Claim Amount</label>
                     </div>
 
                     <p class="file">Please upload any supporting documents. </p>
@@ -50,7 +44,43 @@
                             @TempData["SubmitClaimFailed"]
                         </div>
                     }
+                    @if (TempData["SubmitClaimSuccess"] != null)
+                    {
+                        <div class="alert alert-success">
+                            @TempData["SubmitClaimSuccess"]
+                        </div>
+                    }
                 </form>
+            }
+            @if ((int)TempData["AccessLevel"] != 1)
+            {
+                <div class="alert alert-danger">
+                    Only lecturers may submit claims.
+                </div>
+                <div class="input-box">
+                    <input type="number" disabled />
+                    <label>User ID</label>
+                </div>
+
+                <div class="input-box">
+                    <input type="number"  disabled />
+                    <label>Hours Worked</label>
+                </div>
+
+                <div class="input-box">
+                    <input type="number" disabled />
+                    <label>Hourly Rate</label>
+                </div>
+
+                <div class="input-box">
+                    <input type="text" readonly />
+                    <label>Claim Amount</label>
+                </div>
+
+                <p class="file">Please upload any supporting documents. </p>
+                <input type="file" name="file" disabled />
+
+                <button class="btn" type="submit" disabled>Submit Claim</button>
             }
         </div>
     </div>
@@ -64,9 +94,17 @@
                 var hoursWorked = parseFloat($('#HoursWorked').val()) || 0;
                 var hourlyRate = parseFloat($('#HourlyRate').val()) || 0;
                 var claimAmount = hoursWorked * hourlyRate;
-                $('#ClaimAmount').val('R ' + claimAmount.toFixed(2));
+                $('#ClaimAmount').val('R' + claimAmount.toFixed(0));
             }
-            $('#HoursWorked, #HourlyRate').on('input', calculateClaimAmount);
-        });
+
+            function allowOnlyWholeNumbers(event) {
+                    if (event.which < 48 || event.which > 57) {
+                            event.preventDefault();
+                        }
+                    }
+
+                    $('#HoursWorked, #HourlyRate').on('input', calculateClaimAmount);
+                    $('#HoursWorked, #HourlyRate').on('keypress', allowOnlyWholeNumbers);
+                });
     </script>
 }

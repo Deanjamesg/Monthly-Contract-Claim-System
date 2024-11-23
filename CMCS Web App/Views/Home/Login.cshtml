@@ -9,6 +9,13 @@
     </div>
 }
 
+@if (TempData["Logout"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Logout"]
+    </div>
+}
+
 <div class="page">
     <div class="wrapper">
         <div class="form-box">

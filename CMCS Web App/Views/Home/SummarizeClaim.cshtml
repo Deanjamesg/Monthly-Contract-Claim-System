@@ -1,23 +1,23 @@
 ﻿@model IEnumerable<CMCS_Web_App.Models.UserClaim>
 
 @{
-    ViewData["Title"] = "Review Claim";
+    ViewData["Title"] = "Summarize Claim";
 }
 
-@if ((int)TempData["AccessLevel"] != 2)
+@if ((int)TempData["AccessLevel"] != 3)
 {
     <div class="alert alert-danger">
-        This page is for Programme Co-Ordinators and Academic Managers only.
+        This page is for HR only.
     </div>
 }
 
-@if ((int)TempData["AccessLevel"] == 2)
+@if ((int)TempData["AccessLevel"] == 3)
 {
     <div class="page">
         <div class="wrapper">
             <div class="table">
-                <h1>Review Flagged Claims</h1>
-                <p>Review the list of all flagged claims below.</p>
+                <h1>Process Approved Claims</h1>
+                <p>Process the list of all approved claims below.</p>
                 <table>
                     <tr>
                         <th>Claim ID</th>
@@ -27,7 +27,6 @@
                         <th>Hours Worked</th>
                         <th>Hourly Rate</th>
                         <th>File</th>
-                        <th>Status</th>
                         <th>Review</th>
                     </tr>
 
@@ -42,19 +41,9 @@
                             <td>R @claim.HourlyRate / h</td>
                             <td><a asp-controller="Home" asp-action="DownloadFile" asp-route-id="@claim.UserClaimId">@claim.FileName</a></td>
                             <td>
-                                @if (claim.ClaimStatus == "Pending")
-                                {
-                                    <span class="pending">Pending</span>
-                                }
-                            </td>
-                            <td>
-                                <form asp-controller="Home" asp-action="ApproveClaim" method="post">
+                                <form asp-controller="Home" asp-action="MakePDF" method="post">
                                     <input type="hidden" name="id" value="@claim.UserClaimId" />
-                                    <button class="btn btn-accept" type="submit">Approve</button>
-                                </form>
-                                <form asp-controller="Home" asp-action="RejectClaim" method="post">
-                                    <input type="hidden" name="id" value="@claim.UserClaimId" />
-                                    <button class="btn btn-reject" type="submit">Reject</button>
+                                    <button class="btn btn-accept" type="submit">Create Invoice</button>
                                 </form>
                             </td>
                         </tr>
@@ -65,4 +54,5 @@
         </div>
     </div>
 }
+
 

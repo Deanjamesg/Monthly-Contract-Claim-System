@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
+using System.Reflection.Metadata;
 
 namespace CMCS_Web_App.Controllers
 {
@@ -64,12 +65,45 @@ namespace CMCS_Web_App.Controllers
                 return RedirectToAction("Login");
             }
 
-            // Null-coalescing Operator
-            var claims = _context.UserClaim.Include(c => c.User).ToList() ?? new List<UserClaim>();
+            var flaggedClaims = new List<UserClaim>();
+
+            int _accessLvl = CheckAccessLevel();
+
+            // Check to see if the user logged in is an administrator before populating the list of all flagged claims.
+            if (_accessLvl == 2)
+            {
+                flaggedClaims = _context.UserClaim.Include(c => c.User).Where(c => c.FlaggedClaim == true && c.ClaimStatus == "Pending").ToList();
+            }
 
             TempData["AccessLevel"] = CheckAccessLevel();
 
-            return View(claims);
+            return View(flaggedClaims);
+        }
+
+        //-----------------------------------------------------------------------------------
+
+        // Process Payment for Approved Claims Page
+        public IActionResult SummarizeClaim()
+        {
+            if (!IsUserLoggedIn())
+            {
+                TempData["Error"] = "You must be logged in to summarize a claim.";
+                return RedirectToAction("Login");
+            }
+
+            var approvedClaims = new List<UserClaim>();
+
+            int _accessLvl = CheckAccessLevel();
+
+            // Check to see if the user logged in is an HR before populating the list of all flagged claims.
+            if (_accessLvl == 3)
+            {
+                approvedClaims = _context.UserClaim.Include(c => c.User).Where(c => c.FlaggedClaim == false && c.ClaimStatus == "Approved").ToList();
+            }
+
+            TempData["AccessLevel"] = CheckAccessLevel();
+
+            return View(approvedClaims);
         }
 
         //-----------------------------------------------------------------------------------
@@ -98,6 +132,32 @@ namespace CMCS_Web_App.Controllers
             TempData["AccessLevel"] = _accessLvl;
 
             return View(claims);
+        }
+
+        public IActionResult ViewUserClaim()
+        {
+            if (!IsUserLoggedIn())
+            {
+                TempData["Error"] = "You must be logged in to view your claims.";
+                return RedirectToAction("Login");
+            }
+
+            var userClaims = new List<UserClaim>();
+
+            int _accessLvl = CheckAccessLevel();
+
+            // Check to see if the user logged in is a lecturer before populating the list of all their claims.
+            if (_accessLvl == 1)
+            {
+                var userId = GetUserInSession().UserId;
+
+                userClaims = userClaims = _context.UserClaim.Include(c => c.User).Where(c => c.UserId == userId).ToList();
+            }
+
+            TempData["AccessLevel"] = _accessLvl;
+
+            return View(userClaims);
+
         }
 
         //-----------------------------------------------------------------------------------
@@ -212,7 +272,7 @@ namespace CMCS_Web_App.Controllers
                 return RedirectToAction("Account");
             }
 
-            TempData["LoginFailed"] = "These details either do not exist or have been entered incorrectly. Please try again.";
+            TempData["LoginFailed"] = "These details do not exist or have been entered incorrectly. Please try again.";
 
             return View();
         }
@@ -224,10 +284,13 @@ namespace CMCS_Web_App.Controllers
         {
             if (!IsUserLoggedIn())
             {
+                TempData["Error"] = "You are not logged in.";
                 return RedirectToAction("Login");
             }
 
             _httpContextAccessor.HttpContext.Session.Remove("UserID");
+
+            TempData["Logout"] = "Successfully logged out!";
 
             return RedirectToAction("Login");
         }
@@ -238,6 +301,8 @@ namespace CMCS_Web_App.Controllers
         /////////////////////////////////////////////////////////////////////////////////////
 
         #region ACTIONS
+
+
         #endregion
 
         /////////////////////////////////////////////////////////////////////////////////////
@@ -267,6 +332,8 @@ namespace CMCS_Web_App.Controllers
 
             claim.ClaimStatus = "Approved";
 
+            claim.FlaggedClaim = false;
+
             _context.SaveChanges();
 
             return RedirectToAction("ReviewClaim");
@@ -281,6 +348,8 @@ namespace CMCS_Web_App.Controllers
 
             claim.ClaimStatus = "Rejected";
 
+            claim.FlaggedClaim = false;
+
             _context.SaveChanges();
 
             return RedirectToAction("ReviewClaim");
@@ -290,11 +359,12 @@ namespace CMCS_Web_App.Controllers
 
         // Submit New Claim Action
         [HttpPost]
-        public async Task<IActionResult> SubmitNewClaim(UserClaim claim, IFormFile file)
+        public async Task<IActionResult> SubmitNewClaim(UserClaim claim, IFormFile file, string ClaimAmount)
         {
+            // CALL REMOVE CLAIM CURRENCY METHOD
+            claim.ClaimAmount = RemoveClaimCurrency(ClaimAmount);
 
             // CALL VALIDATE CLAIM INPUT FIELDS METHOD
-
             if (!ValidateClaimInput(claim))
             {
                 return RedirectToAction("CreateClaim");
@@ -324,19 +394,13 @@ namespace CMCS_Web_App.Controllers
                 }
             }
 
-            //int? userID = _httpContextAccessor.HttpContext.Session.GetInt32("UserID");
-
-            //claim.UserId = userID.Value;
-
             claim.FlaggedClaim = false;
 
             claim.ClaimStatus = "Pending";
 
 
-            // CALL VALIDATE CLAIM AMOUNT METHOD
-
-
-
+            // CALL VALIDATE CLAIM DETAILS METHOD
+            claim = ValidateClaimDetails(claim);
 
             try
             {
@@ -344,7 +408,9 @@ namespace CMCS_Web_App.Controllers
 
                 _context.SaveChanges();
 
-                return RedirectToAction("ReviewClaim");
+                TempData["SubmitClaimSuccess"] = "Successfully submitted your claim!";
+
+                return RedirectToAction("CreateClaim");
             }
 
             catch (Exception ex)
@@ -358,8 +424,7 @@ namespace CMCS_Web_App.Controllers
 
         //-----------------------------------------------------------------------------------
 
-        // Validate Claim Details
-
+        // Validate Claim Input Details
         private bool ValidateClaimInput(UserClaim claim)
         {
             if (claim.HourlyRate <= 0)
@@ -381,6 +446,53 @@ namespace CMCS_Web_App.Controllers
             }
 
             return true;
+        }
+
+        //-----------------------------------------------------------------------------------
+
+        // Validate Claim for Approval
+        private UserClaim ValidateClaimDetails(UserClaim claim)
+        {
+            // Condition 1: HourlyRate is greater than 500
+            if (claim.HourlyRate > 500)
+            {
+                claim.FlaggedClaim = true;
+                return claim;
+            }
+
+            // Condition 2: HoursWorked is greater than 80
+            if (claim.HoursWorked > 80)
+            {
+                claim.FlaggedClaim = true;
+                return claim;
+            }
+
+            // Condition 3: ClaimAmount is greater than 15000
+            if (claim.ClaimAmount > 15000)
+            {
+                claim.FlaggedClaim = true;
+                return claim;
+            }
+
+            // Condition 4: ClaimAmount does not match the calculated amount.
+            if (claim.ClaimAmount != (claim.HourlyRate * claim.HoursWorked))
+            {
+                claim.FlaggedClaim = true;
+                return claim;
+            }
+
+            // If none of the conditions are met, the claim is valid.
+            claim.ClaimStatus = "Approved";
+
+            return claim;
+        }
+
+        //-----------------------------------------------------------------------------------
+
+        // Removes the 'R' from the ClaimAmount string and parses it to a double and returns it.
+        private double RemoveClaimCurrency(string ClaimAmount)
+        {
+            return Convert.ToDouble(ClaimAmount.Replace("R", ""));
         }
 
         #endregion
@@ -408,6 +520,8 @@ namespace CMCS_Web_App.Controllers
 
             return RedirectToAction("Login");
         }
+
+        //-----------------------------------------------------------------------------------
 
         #endregion
 

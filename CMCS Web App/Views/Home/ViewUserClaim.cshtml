@@ -1,42 +1,38 @@
 ﻿@model IEnumerable<CMCS_Web_App.Models.UserClaim>
 
 @{
-    ViewData["Title"] = "Review Claim";
+    ViewData["Title"] = "View User Claim";
 }
-
-@if ((int)TempData["AccessLevel"] != 2)
+            
+@if ((int)TempData["AccessLevel"] != 1)
 {
     <div class="alert alert-danger">
-        This page is for Programme Co-Ordinators and Academic Managers only.
+        This page is for lecturers to view their claims.
     </div>
 }
 
-@if ((int)TempData["AccessLevel"] == 2)
+@if ((int)TempData["AccessLevel"] == 1)
 {
     <div class="page">
         <div class="wrapper">
             <div class="table">
-                <h1>Review Flagged Claims</h1>
-                <p>Review the list of all flagged claims below.</p>
+
+                <h1>View All Your Requested Claims</h1>
+                <p>View the list of all your claims below.</p>
                 <table>
                     <tr>
                         <th>Claim ID</th>
-                        <th>User ID</th>
-                        <th>Full Name</th>
                         <th>Claim Amount</th>
                         <th>Hours Worked</th>
                         <th>Hourly Rate</th>
                         <th>File</th>
-                        <th>Status</th>
-                        <th>Review</th>
+                        <th>Claim Status</th>
                     </tr>
 
                     @foreach (var claim in Model)
                     {
                         <tr>
                             <td>@claim.UserClaimId</td>
-                            <td>@claim.UserId</td>
-                            <td>@claim.User.FirstName @claim.User.Surname</td>
                             <td>R @claim.ClaimAmount</td>
                             <td>@claim.HoursWorked Hrs</td>
                             <td>R @claim.HourlyRate / h</td>
@@ -46,16 +42,18 @@
                                 {
                                     <span class="pending">Pending</span>
                                 }
-                            </td>
-                            <td>
-                                <form asp-controller="Home" asp-action="ApproveClaim" method="post">
-                                    <input type="hidden" name="id" value="@claim.UserClaimId" />
-                                    <button class="btn btn-accept" type="submit">Approve</button>
-                                </form>
-                                <form asp-controller="Home" asp-action="RejectClaim" method="post">
-                                    <input type="hidden" name="id" value="@claim.UserClaimId" />
-                                    <button class="btn btn-reject" type="submit">Reject</button>
-                                </form>
+                                else if (claim.ClaimStatus == "Approved")
+                                {
+                                    <span class="approved">Approved</span>
+                                }
+                                else if (claim.ClaimStatus == "PAID")
+                                {
+                                    <span class="approved">Approved</span>
+                                }
+                                else
+                                {
+                                    <span class="rejected">Rejected</span>
+                                }
                             </td>
                         </tr>
                     }
@@ -65,4 +63,3 @@
         </div>
     </div>
 }
-
