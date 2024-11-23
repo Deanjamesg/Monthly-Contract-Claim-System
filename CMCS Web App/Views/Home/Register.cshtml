@@ -3,50 +3,61 @@
     ViewData["Title"] = "Register";
 }
 
-<div class="page">
-    <div class="wrapper">
-        <div class="form-box">
+@if ((int)TempData["AccessLevel"] != 3)
+{
+    <div class="alert alert-danger">
+        This page is only available to users with the HR role.
+    </div>
+}
 
-            <h1>Register</h1>
-            <p>Register as a Lecturer</p>
+@if ((int)TempData["AccessLevel"] == 3)
+{
+    <div class="page">
+        <div class="wrapper">
+            <div class="form-box">
 
-            <form asp-controller="Home" asp-action="RegisterUser" method="post">
+                <h1>Register</h1>
+                <p>Register a New Lecturer</p>
 
-                <div class="input-box">
-                    <input type="text" name="Email" required />
-                    <label>Email</label>
-                </div>
+                <form asp-controller="Home" asp-action="RegisterUser" method="post">
 
-                <div class="input-box">
-                    <input type="text" name="FirstName" required />
-                    <label>First Name</label>
-                </div>
-
-                <div class="input-box">
-                    <input type="text" name="Surname" required />
-                    <label>Surname</label>
-                </div>
-
-                <div class="input-box">
-                    <input type="text" name="Faculty" required />
-                    <label>Faculty</label>
-                </div>
-
-                <div class="input-box">
-                    <input type="password" name="Password" required />
-                    <label>Password</label>
-                </div>
-
-                <button class="btn" type="submit">Register</button>
-
-                @if (TempData["RegisterFailed"] != null)
-                {
-                    <div class="alert alert-danger">
-                        @TempData["RegisterFailed"]
+                    <div class="input-box">
+                        <input type="text" name="Email" required />
+                        <label>Email</label>
                     </div>
-                }
-            </form>
 
+                    <div class="input-box">
+                        <input type="text" name="FirstName" required />
+                        <label>First Name</label>
+                    </div>
+
+                    <div class="input-box">
+                        <input type="text" name="Surname" required />
+                        <label>Surname</label>
+                    </div>
+
+                    <div class="input-box">
+                        <input type="text" name="Faculty" required />
+                        <label>Faculty</label>
+                    </div>
+
+                    <div class="input-box">
+                        <input type="password" name="Password" required />
+                        <label>Password</label>
+                    </div>
+
+                    <button class="btn" type="submit">Register</button>
+
+                    @if (TempData["RegisterFailed"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            @TempData["RegisterFailed"]
+                        </div>
+                    }
+                </form>
+
+            </div>
         </div>
     </div>
-</div>
+}
+

@@ -3,46 +3,28 @@
     ViewData["Title"] = "Create Claim";
 }
 
+@if ((int)TempData["AccessLevel"] != 1)
+{
+    <div class="alert alert-danger">
+        Only lecturers may submit claims.
+    </div>
+}
+
 <div class="page">
     <div class="wrapper">
         <div class="form-box">
             <h1>Submit a Claim</h1>
             <p>Please enter in all the required details.</p>
-
-            @if ((int)TempData["AccessLevel"] != 1)
-            {
-                <div class="alert alert-warning">
-                    Only lecturers may submit claims.
-                </div>
-                    
-                <div class="input-box">
-                    <label>Claim Amount</label>
-                </div>
-
-                <div class="input-box">
-                    <label>Hours Worked</label>
-                </div>
-
-                <div class="input-box">
-                    <label>Hourly Rate</label>
-                </div>
-
-                <p class="file">Please upload any supporting documents. </p>
-                <p>Valid file types: .pdf / .docx / .png / .jpg</p>
-                <input type="file" name="file" disabled />
-
-                <button class="btn" disabled >Submit Claim</button>
-            }
-            else
+            @if ((int)TempData["AccessLevel"] == 1)
             {
                 <form asp-controller="Home" asp-action="SubmitNewClaim" method="post" enctype="multipart/form-data">
 
                     <div class="input-box-static">
-                        <input type="number" asp-for="UserId" value="@TempData["UserId"]" readonly />
+                        <input type="number" asp-for="UserId" value="@TempData["UserId"]" readonly required/>
                         <label>User ID</label>
                     </div>
                     <div class="input-box-static">
-                        <input type="text" asp-for="ClaimAmount" value="R" readonly />
+                        <input type="text" asp-for="ClaimAmount" value="R" readonly required/>
                         <label>Claim Amount</label>
                     </div>
 

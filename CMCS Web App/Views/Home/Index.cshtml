@@ -24,6 +24,7 @@
     </div>
 
     <div class="box">
+        <p>Once the local database has been successfully created, click the button below to create the test data, for logging in as the various roles as different users on the Login page.</p>
         @if (TempData["UsersExist"] != null)
         {
             <div class="alert alert-danger">
@@ -37,7 +38,7 @@
             </div>
         }
         <form asp-controller="Home" asp-action="CreateUserSamples">
-            <button class="btn" type="submit">Create Users</button>
+            <button class="btn" type="submit">Create Test Data</button>
         </form>
     </div>
 </div>

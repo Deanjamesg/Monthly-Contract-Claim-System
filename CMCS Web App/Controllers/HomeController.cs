@@ -147,7 +147,7 @@ namespace CMCS_Web_App.Controllers
         /////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////
 
-        #region USER SESSION | ACCESS MANAGEMENT | Login + Logout 
+        #region USER SESSION | ACCESS MANAGEMENT | LOGIN | LOGOUT 
 
         // Gets the User object from the database that is currently in session.
         private User GetUserInSession()
@@ -183,9 +183,6 @@ namespace CMCS_Web_App.Controllers
                 case "HR":
                     accessLevel = 3;
                     break;
-                default:
-                    accessLevel = 0;
-                    break;
             }
             return accessLevel;
         }
@@ -215,7 +212,7 @@ namespace CMCS_Web_App.Controllers
                 return RedirectToAction("Account");
             }
 
-            TempData["LoginFailed"] = "Incorrect login details have been entered. Please try again.";
+            TempData["LoginFailed"] = "These details either do not exist or have been entered incorrectly. Please try again.";
 
             return View();
         }
@@ -295,9 +292,12 @@ namespace CMCS_Web_App.Controllers
         [HttpPost]
         public async Task<IActionResult> SubmitNewClaim(UserClaim claim, IFormFile file)
         {
-            if (!IsUserLoggedIn())
+
+            // CALL VALIDATE CLAIM INPUT FIELDS METHOD
+
+            if (!ValidateClaimInput(claim))
             {
-                return RedirectToAction("Login");
+                return RedirectToAction("CreateClaim");
             }
 
             if (file != null && file.Length > 0)
@@ -311,7 +311,7 @@ namespace CMCS_Web_App.Controllers
                 {
                     TempData["SubmitClaimFailed"] = "Please submit a file type of one of the following: .pdf / .docx / .png / .jpg";
 
-                    return View("CreateClaim");
+                    return RedirectToAction("CreateClaim");
                 }
 
                 claim.FileName = fileName;
@@ -324,13 +324,19 @@ namespace CMCS_Web_App.Controllers
                 }
             }
 
-            int? userID = _httpContextAccessor.HttpContext.Session.GetInt32("UserID");
+            //int? userID = _httpContextAccessor.HttpContext.Session.GetInt32("UserID");
 
-            claim.UserId = userID.Value;
+            //claim.UserId = userID.Value;
 
             claim.FlaggedClaim = false;
 
             claim.ClaimStatus = "Pending";
+
+
+            // CALL VALIDATE CLAIM AMOUNT METHOD
+
+
+
 
             try
             {
@@ -345,9 +351,36 @@ namespace CMCS_Web_App.Controllers
             {
                 TempData["SubmitClaimFailed"] = "Incorrect details have been entered. Please ensure, all details have been entered correctly and you have filled in all the fields, and have attached the supporting documents.";
 
-                return View("CreateClaim");
+                return RedirectToAction("CreateClaim");
             }
 
+        }
+
+        //-----------------------------------------------------------------------------------
+
+        // Validate Claim Details
+
+        private bool ValidateClaimInput(UserClaim claim)
+        {
+            if (claim.HourlyRate <= 0)
+            {
+                TempData["SubmitClaimFailed"] = "Please enter a valid hourly rate.";
+                return false;
+            }
+
+            if (claim.HoursWorked <= 0)
+            {
+                TempData["SubmitClaimFailed"] = "Please enter a valid number of hours worked.";
+                return false;
+            }
+
+            if (claim.ClaimAmount <= 0)
+            {
+                TempData["SubmitClaimFailed"] = "Please enter a valid claim amount.";
+                return false;
+            }
+
+            return true;
         }
 
         #endregion
@@ -372,8 +405,6 @@ namespace CMCS_Web_App.Controllers
                 TempData["RegisterFailed"] = "Incorrect details have been entered. Please ensure, all details have been entered correctly and you have filled in all the fields.";
                 return View("Register");
             }
-
-            TempData["AccessLevel"] = CheckAccessLevel();
 
             return RedirectToAction("Login");
         }
@@ -480,7 +511,7 @@ namespace CMCS_Web_App.Controllers
                 return RedirectToAction("Account");
             }
 
-            TempData["Error"] = "Invalid login attempt.";
+            TempData["Error"] = "To use these buttons, please ensure you have created the test data using the 'Create Test Data' button on the Home Page.";
 
             return View("Login");
         }
@@ -498,7 +529,7 @@ namespace CMCS_Web_App.Controllers
                 return RedirectToAction("Account");
             }
 
-            TempData["Error"] = "Failed login attempt.";
+            TempData["Error"] = "To use these buttons, please ensure you have created the test data using the 'Create Test Data' button on the Home Page.";
 
             return View("Login");
         }
@@ -516,7 +547,7 @@ namespace CMCS_Web_App.Controllers
                 return RedirectToAction("Account");
             }
 
-            TempData["Error"] = "Failed login attempt.";
+            TempData["Error"] = "To use these buttons, please ensure you have created the test data using the 'Create Test Data' button on the Home Page.";
 
             return View("Login");
         }
@@ -534,7 +565,7 @@ namespace CMCS_Web_App.Controllers
                 return RedirectToAction("Account");
             }
 
-            TempData["Error"] = "Failed login attempt.";
+            TempData["Error"] = "To use these buttons, please ensure you have created the test data using the 'Create Test Data' button on the Home Page.";
 
             return View("Login");
         }
