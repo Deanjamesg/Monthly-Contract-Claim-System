@@ -3,6 +3,13 @@
     ViewData["Title"] = "Account";
 }
 
+@if (TempData["PasswordChangeSuccess"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["PasswordChangeSuccess"]
+    </div>
+}
+
 <div class="page">
     <div class="wrapper">
         <div class="details-box">
@@ -34,10 +41,51 @@
                 <label>Faculty</label>
             </div>
             }
-            <div class="input-box-static">
-                <input type="text" value="@Model.Password" readonly />
-                <label>Password</label>
+
+            <button class="btn change-password" type="button" id="changePasswordBtn">Change Password</button>
+
+            <div style="display:none;" id="changePasswordModal">
+                <div class="input-box-static">
+                    <input type="text" value="@Model.Password" readonly />
+                    <label>Current Password</label>
+                </div>
+                <form asp-action="ChangePassword" id="changePasswordForm">
+                    <div class="input-box">
+                        <input type="password" name="password" id="newPassword" required />
+                        <label>New Password</label>
+                    </div>
+                    <div class="wrapper">
+                        <button class="btn save-change" type="submit">Save Changes</button>
+                        <button class="btn cancel-change" type="button" id="cancelChangeBtn">Cancel</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var modal = $('#changePasswordModal');
+            var btn = $('#changePasswordBtn');
+            var cancelBtn = $('#cancelChangeBtn');
+
+            btn.on('click', function () {
+                modal.show();
+            });
+
+            cancelBtn.on('click', function () {
+                $('#newPassword').val('');
+                modal.hide();
+            });
+
+            $(window).on('click', function (event) {
+                if (event.target == modal[0]) {
+                    modal.hide();
+                }
+            });
+        });
+    </script>
+}

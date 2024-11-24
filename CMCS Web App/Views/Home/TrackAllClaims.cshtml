@@ -3,55 +3,66 @@
     ViewData["Title"] = "Track All Claims";
 }
 
-<div class="page">
-    <div class="wrapper">
-        <div class="table">
+@if ((int)TempData["AccessLevel"] == 1)
+{
+    <div class="alert alert-danger">
+        This page is for Administrators only.
+    </div>
+}
 
-            <h1>Track All Claims</h1>
-            <p>View all requested claims below.</p>
-            <table>
-                <tr>
-                    <th>Claim ID</th>
-                    <th>Lecturer ID</th>
-                    <th>Full Name</th>
-                    <th>Email</th>
-                    <th>Faculty</th>
-                    <th>Claim Amount</th>
-                    <th>Hours Worked</th>
-                    <th>Hourly Rate</th>
-                    <th>File</th>
-                    <th>Status</th>
-                </tr>
+@if ((int)TempData["AccessLevel"] == 2 || (int)TempData["AccessLevel"] == 3)
+{
+    <div class="page">
+        <div class="wrapper">
+            <div class="table">
 
-                @foreach (var claim in Model)
-                {
+                <h1>Track All Claims</h1>
+                <p>View all requested claims below.</p>
+                <table>
                     <tr>
-                        <td>@claim.UserClaimId</td>
-                        <td>@claim.UserId</td>
-                        <td>@claim.User.FirstName @claim.User.Surname</td>
-                        <td>@claim.User.Email</td>
-                        <td>@claim.User.Faculty</td>
-                        <td>R @claim.ClaimAmount</td>
-                        <td>@claim.HoursWorked Hrs</td>
-                        <td>R @claim.HourlyRate / h</td>
-                        <td><a asp-controller="Home" asp-action="DownloadFile" asp-route-id="@claim.UserClaimId">@claim.FileName</a></td>
-                        <td>
-                            @if (claim.ClaimStatus == "Pending")
-                            {
-                                <span class="pending">Pending</span>
-                            }
-                            else if (claim.ClaimStatus == "Approved")
-                            {
-                                <span class="approved">Approved</span>
-                            }
-                            else
-                            {
-                                <span class="rejected">Rejected</span>
-                            }
-                        </td>
+                        <th>Claim ID</th>
+                        <th>User ID</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Faculty</th>
+                        <th>Claim Amount</th>
+                        <th>Hours Worked</th>
+                        <th>Hourly Rate</th>
+                        <th>File</th>
+                        <th>Status</th>
                     </tr>
-                }
-            </table>
+
+                    @foreach (var claim in Model)
+                    {
+                        <tr>
+                            <td>@claim.UserClaimId</td>
+                            <td>@claim.UserId</td>
+                            <td>@claim.User.FirstName @claim.User.Surname</td>
+                            <td>@claim.User.Email</td>
+                            <td>@claim.User.Faculty</td>
+                            <td>R @claim.ClaimAmount</td>
+                            <td>@claim.HoursWorked Hrs</td>
+                            <td>R @claim.HourlyRate / h</td>
+                            <td><a asp-controller="Home" asp-action="DownloadFile" asp-route-id="@claim.UserClaimId">@claim.FileName</a></td>
+                            <td>
+                                @if (claim.ClaimStatus == "Pending")
+                                {
+                                    <span class="pending">Pending</span>
+                                }
+                                else if (claim.ClaimStatus == "Approved")
+                                {
+                                    <span class="approved">Approved</span>
+                                }
+                                else
+                                {
+                                    <span class="rejected">Rejected</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
         </div>
     </div>
-</div>
+}
+

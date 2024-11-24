@@ -5,7 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
-using System.Reflection.Metadata;
+using iText.Kernel.Pdf;
+using iText.Layout.Element;
+using iText.Layout;
+using System.IO;
 
 namespace CMCS_Web_App.Controllers
 {
@@ -125,8 +128,6 @@ namespace CMCS_Web_App.Controllers
             if (_accessLvl > 1)
             {
                 claims = _context.UserClaim.Include(c => c.User).ToList();
-
-                return View(claims);
             }
 
             TempData["AccessLevel"] = _accessLvl;
@@ -302,6 +303,24 @@ namespace CMCS_Web_App.Controllers
 
         #region ACTIONS
 
+        // Update User's Password from Account View
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(string password)
+        {
+            var userId = _httpContextAccessor.HttpContext.Session.GetInt32("UserID");
+
+            var user = await _context.User.FindAsync(userId);
+
+            user.Password = password;
+
+            _context.Update(user);
+
+            await _context.SaveChangesAsync();
+
+            TempData["PasswordChangeSuccess"] = "Successfully changed your password!";
+
+            return RedirectToAction("Account");
+        }
 
         #endregion
 
@@ -506,6 +525,8 @@ namespace CMCS_Web_App.Controllers
         [HttpPost]
         public IActionResult RegisterUser(User user)
         {
+            user.Role = "Lecturer";
+
             if (ModelState.IsValid)
             {
                 _context.Add(user);
@@ -515,13 +536,79 @@ namespace CMCS_Web_App.Controllers
             else
             {
                 TempData["RegisterFailed"] = "Incorrect details have been entered. Please ensure, all details have been entered correctly and you have filled in all the fields.";
-                return View("Register");
+
+                return RedirectToAction("Register");
             }
 
-            return RedirectToAction("Login");
+            TempData["RegisterSuccess"] = "Successfully registered a new lecturer!";
+
+            return RedirectToAction("Register");
         }
 
         //-----------------------------------------------------------------------------------
+
+        [HttpPost]
+        public IActionResult MakePDF(int id)
+        {
+            var claim = _context.UserClaim.FirstOrDefault(c => c.UserClaimId == id);
+
+            var pdfData = GeneratePdfInvoice(claim);
+
+            claim.PdfFileName = $"Invoice_{claim.UserClaimId}.pdf";
+
+            claim.PdfFileData = pdfData;
+
+            _context.Update(claim);
+
+            _context.SaveChanges();
+
+            TempData["PdfGenerated"] = "PDF Invoice has been generated and saved successfully.";
+
+            return RedirectToAction("SummarizeClaim");
+        }
+
+        //-----------------------------------------------------------------------------------
+
+        // Method to Generate PDF Invoice
+        private byte[] GeneratePdfInvoice(UserClaim claim)
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                // Initialize PDF writer and document
+                var writer = new PdfWriter(memoryStream);
+                var pdf = new PdfDocument(writer);
+                var document = new Document(pdf);
+
+                // Add content to the PDF
+                document.Add(new Paragraph("Claim Invoice"));
+                document.Add(new Paragraph($"User ID: {claim.UserId}"));
+                document.Add(new Paragraph($"Hours Worked: {claim.HoursWorked}"));
+                document.Add(new Paragraph($"Hourly Rate: {claim.HourlyRate}"));
+                document.Add(new Paragraph($"Claim Amount: {claim.ClaimAmount}"));
+                document.Add(new Paragraph($"Claim Status: {claim.ClaimStatus}"));
+
+                // Close the document
+                document.Close();
+
+                // Return the PDF as a byte array
+                return memoryStream.ToArray();
+            }
+        }
+
+        //-----------------------------------------------------------------------------------
+
+        // Method to Download PDF Invoice
+        public IActionResult DownloadPdf(int id)
+        {
+            var claim = _context.UserClaim.FirstOrDefault(c => c.UserClaimId == id);
+
+            if (claim == null || claim.PdfFileData == null)
+            {
+                return NotFound();
+            }
+
+            return File(claim.PdfFileData, "application/pdf", claim.PdfFileName);
+        }
 
         #endregion
 

@@ -17,41 +17,54 @@
             <div class="form-box">
 
                 <h1>Register</h1>
-                <p>Register a New Lecturer</p>
+                <p>Register a New Lecturer to add them to the System.</p>
 
                 <form asp-controller="Home" asp-action="RegisterUser" method="post">
 
                     <div class="input-box">
-                        <input type="text" name="Email" required />
+                        <input type="text" asp-for="Email" required />
                         <label>Email</label>
                     </div>
 
                     <div class="input-box">
-                        <input type="text" name="FirstName" required />
+                        <input type="text" asp-for="ContactNumber" required />
+                        <label>Contact Number</label>
+                    </div>
+
+                    <div class="input-box">
+                        <input type="text" asp-for="FirstName" required />
                         <label>First Name</label>
                     </div>
 
                     <div class="input-box">
-                        <input type="text" name="Surname" required />
+                        <input type="text" asp-for="Surname" required />
                         <label>Surname</label>
                     </div>
 
                     <div class="input-box">
-                        <input type="text" name="Faculty" required />
+                        <input type="text" asp-for="Faculty" required />
                         <label>Faculty</label>
                     </div>
 
+                    <p>This password is temporary. Lecturer must login to their account and change their password.</p>
+
                     <div class="input-box">
-                        <input type="password" name="Password" required />
+                        <input type="text" asp-for="Password" required />
                         <label>Password</label>
                     </div>
 
-                    <button class="btn" type="submit">Register</button>
+                    <button class="btn" type="submit">Register Lecturer</button>
 
                     @if (TempData["RegisterFailed"] != null)
                     {
                         <div class="alert alert-danger">
                             @TempData["RegisterFailed"]
+                        </div>
+                    }
+                    @if (TempData["RegisterSuccess"] != null)
+                    {
+                        <div class="alert alert-success">
+                            @TempData["RegisterSuccess"]
                         </div>
                     }
                 </form>

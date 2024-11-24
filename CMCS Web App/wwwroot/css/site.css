@@ -230,7 +230,7 @@ footer {
 
 .input-box {
     position: relative;
-    margin: 25px 0px;
+    margin: 23px 0px;
     height: 50px;
     width: 100%;
     border-bottom: 2px solid white;
@@ -299,7 +299,7 @@ footer {
     backdrop-filter: blur(3px);
     flex-direction: column;
     justify-content: center;
-    width: 500px;
+    width: 600px;
     padding: 30px;
     margin: 15px;
     border-radius: 15px;
@@ -376,6 +376,46 @@ footer {
         background-color: #ff4040;
     }
 
+.change-password {
+    font-size: 16px;
+    width: 200px;
+    margin: 15px;
+    margin-left: 0px;
+}
+
+.change-password:hover {
+    box-shadow: 2px 2px 8px 3px rgba(1,1,1,0.5);
+    color: #000;
+    background-color: #75ffd3;
+}
+
+.save-change {
+    font-size: 16px;
+    width: 175px;
+    margin: 15px;
+    background-color: #86ff84;
+}
+
+    .save-change:hover {
+        box-shadow: 2px 2px 8px 3px rgba(1,1,1,0.5);
+        color: #000;
+        background-color: #53fd51;
+    }
+
+.cancel-change {
+    font-size: 16px;
+    width: 175px;
+    margin: 15px;
+    background-color: #ff6c6c;
+}
+
+    .cancel-change:hover {
+        box-shadow: 2px 2px 8px 3px rgba(1,1,1,0.5);
+        color: #000;
+        background-color: #ff4040;
+    }
+
+
 .table {
     text-align: center;
     width: 100%;
@@ -420,4 +460,3 @@ span.pending {
     font-weight: 500;
     color: #ffe000;
 }
-

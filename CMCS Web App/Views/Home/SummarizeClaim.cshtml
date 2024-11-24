@@ -28,6 +28,7 @@
                         <th>Hourly Rate</th>
                         <th>File</th>
                         <th>Review</th>
+                        <th>Invoice</th>
                     </tr>
 
                     @foreach (var claim in Model)
@@ -46,9 +47,14 @@
                                     <button class="btn btn-accept" type="submit">Create Invoice</button>
                                 </form>
                             </td>
+                            <td>
+                                @if (claim.PdfFileData != null)
+                                {
+                                    <a asp-controller="Home" asp-action="DownloadPdf" asp-route-id="@claim.UserClaimId">Download Invoice</a>
+                                }
+                            </td>
                         </tr>
                     }
-
                 </table>
             </div>
         </div>
