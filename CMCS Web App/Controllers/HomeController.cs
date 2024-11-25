@@ -5,10 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
-using iText.Kernel.Pdf;
-using iText.Layout.Element;
-using iText.Layout;
 using System.IO;
+using PdfSharp.Drawing;
+using PdfSharp.Pdf;
 
 namespace CMCS_Web_App.Controllers
 {
@@ -547,10 +546,11 @@ namespace CMCS_Web_App.Controllers
 
         //-----------------------------------------------------------------------------------
 
+        // Make PDF Invoice Action
         [HttpPost]
-        public IActionResult MakePDF(int id)
+        public IActionResult MakePDF(int Id)
         {
-            var claim = _context.UserClaim.FirstOrDefault(c => c.UserClaimId == id);
+            var claim = _context.UserClaim.Include(uc => uc.User).FirstOrDefault(uc => uc.UserClaimId == Id);
 
             var pdfData = GeneratePdfInvoice(claim);
 
@@ -574,21 +574,47 @@ namespace CMCS_Web_App.Controllers
         {
             using (var memoryStream = new MemoryStream())
             {
-                // Initialize PDF writer and document
-                var writer = new PdfWriter(memoryStream);
-                var pdf = new PdfDocument(writer);
-                var document = new Document(pdf);
+                // Create a new PDF document
+                var document = new PdfDocument();
+                var page = document.AddPage();
+                var gfx = XGraphics.FromPdfPage(page);
+                var font = new XFont("Verdana", 12, XFontStyleEx.Regular);
+                var boldFont = new XFont("Verdana", 12, XFontStyleEx.Bold);
+                var leftPadding = 60;
+                var topPadding = 60;
+                var lineHeight = 20;
+                var valueOffset = 150;
 
-                // Add content to the PDF
-                document.Add(new Paragraph("Claim Invoice"));
-                document.Add(new Paragraph($"User ID: {claim.UserId}"));
-                document.Add(new Paragraph($"Hours Worked: {claim.HoursWorked}"));
-                document.Add(new Paragraph($"Hourly Rate: {claim.HourlyRate}"));
-                document.Add(new Paragraph($"Claim Amount: {claim.ClaimAmount}"));
-                document.Add(new Paragraph($"Claim Status: {claim.ClaimStatus}"));
+                // Draw the header
+                gfx.DrawString("Claim Invoice", new XFont("Verdana", 20, XFontStyleEx.Bold), XBrushes.Black,
+                    new XRect(XUnit.FromPoint(0), XUnit.FromPoint(20), XUnit.FromPoint(page.Width.Point), XUnit.FromPoint(page.Height.Point)),
+                    XStringFormats.TopCenter);
 
-                // Close the document
-                document.Close();
+                // Helper method to draw bold label and regular value
+                void DrawLabelAndValue(string label, string value, int yOffset)
+                {
+                    gfx.DrawString(label, boldFont, XBrushes.Black,
+                        new XRect(XUnit.FromPoint(leftPadding), XUnit.FromPoint(yOffset), XUnit.FromPoint(page.Width.Point), XUnit.FromPoint(page.Height.Point)),
+                        XStringFormats.TopLeft);
+                    gfx.DrawString(value, font, XBrushes.Black,
+                        new XRect(XUnit.FromPoint(leftPadding + valueOffset), XUnit.FromPoint(yOffset), XUnit.FromPoint(page.Width.Point), XUnit.FromPoint(page.Height.Point)),
+                        XStringFormats.TopLeft);
+                }
+
+                // Draw the claim details
+                DrawLabelAndValue("Claim ID:", claim.UserClaimId.ToString(), topPadding);
+                DrawLabelAndValue("User ID:", claim.UserId.ToString(), topPadding + lineHeight);
+                DrawLabelAndValue("Full Name:", $"{claim.User.FirstName} {claim.User.Surname}", topPadding + 2 * lineHeight);
+                DrawLabelAndValue("Email:", claim.User.Email, topPadding + 3 * lineHeight);
+                DrawLabelAndValue("Contact Number:", claim.User.ContactNumber, topPadding + 4 * lineHeight);
+                DrawLabelAndValue("Role:", claim.User.Role, topPadding + 5 * lineHeight);
+                DrawLabelAndValue("Hourly Rate:", claim.HourlyRate.ToString("C"), topPadding + 6 * lineHeight);
+                DrawLabelAndValue("Hours Worked:", claim.HoursWorked.ToString(), topPadding + 7 * lineHeight);
+                DrawLabelAndValue("Claim Status:", claim.ClaimStatus, topPadding + 8 * lineHeight);
+                DrawLabelAndValue("Claim Amount:", claim.ClaimAmount.ToString("C"), topPadding + 9 * lineHeight);
+
+                // Save the document into the memory stream
+                document.Save(memoryStream, false);
 
                 // Return the PDF as a byte array
                 return memoryStream.ToArray();

@@ -41,8 +41,12 @@
                 <label>Faculty</label>
             </div>
             }
-
-            <button class="btn change-password" type="button" id="changePasswordBtn">Change Password</button>
+            <div class="wrapper">
+                <button class="btn change-password" type="button" id="changePasswordBtn">Change Password</button>
+                <form asp-controller="Home" asp-action="logout" method="post">
+                    <button class="btn cancel-change" type="submit">Logout</button>
+                </form>
+            </div>
 
             <div style="display:none;" id="changePasswordModal">
                 <div class="input-box-static">

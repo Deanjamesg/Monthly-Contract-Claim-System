@@ -415,6 +415,19 @@ footer {
         background-color: #ff4040;
     }
 
+.btn-invoice {
+    background-color: #86ff84;
+    height: 40px;
+    width: 150px;
+    font-size: 16px;
+    margin: 0px;
+    transition: .5s;
+}
+
+    .btn-invoice:hover {
+        background-color: #53fd51;
+    }
+
 
 .table {
     text-align: center;
