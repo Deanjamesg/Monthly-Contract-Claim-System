@@ -121,16 +121,17 @@ footer {
 
 .box {
     display: flex;
-    background-color: rgba(15, 15, 15 , 0.8);
+    background-color: rgba(15, 15, 15, 0.8);
     backdrop-filter: blur(3px);
+    border: 2px solid rgba(255, 255, 255, .75);
     flex-direction: column;
     justify-content: center;
     width: 100%;
     padding: 30px;
     margin: 10px;
     border-radius: 15px;
-    border: 2px solid rgba(255, 255, 255, .75);
 }
+
 .box .btn {
     padding: 10px;
     border-radius: 5px;
@@ -200,13 +201,13 @@ footer {
     display: flex;
     background-color: rgba(15, 15, 15, 0.8);
     backdrop-filter: blur(3px);
+    border: 2px solid rgba(255, 255, 255, .75);
     flex-direction: column;
     justify-content: center;
     width: 500px;
     padding: 30px;
     margin: 15px;
     border-radius: 15px;
-    border: 2px solid rgba(255, 255, 255, .4);
 }
 
     .form-box h1 {
@@ -297,13 +298,13 @@ footer {
     display: flex;
     background-color: rgba(15, 15, 15, 0.8);
     backdrop-filter: blur(3px);
+    border: 2px solid rgba(255, 255, 255, .75);
     flex-direction: column;
     justify-content: center;
     width: 600px;
     padding: 30px;
     margin: 15px;
     border-radius: 15px;
-    border: 2px solid rgba(255, 255, 255, .4);
 }
 
 .btn {
@@ -430,15 +431,15 @@ footer {
 
 
 .table {
+    background-color: rgba(15, 15, 15, 0.8);
+    backdrop-filter: blur(3px);
+    border: 2px solid rgba(255, 255, 255, .75);
     text-align: center;
     width: 100%;
-    border: 2px solid rgba(255, 255, 255, .4);
     padding: 50px;
-    background-color: rgba(15, 15, 15, 0.8);
     border-radius: 20px;
     color: white;
     border-spacing: 0 25px;
-    backdrop-filter: blur(3px);
 }
 
     .table th {
@@ -473,3 +474,27 @@ span.pending {
     font-weight: 500;
     color: #ffe000;
 }
+
+.update-user {
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    border: none;
+    background-color: #cdcdcd;
+    color: #000;
+    cursor: pointer;
+    transition: .3s;
+    width: 100%;
+    align-content: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+    .update-user:hover {
+        box-shadow: 2px 2px 8px 3px rgba(1,1,1,0.5);
+        color: #000;
+        background-color: #75ffd3;
+    }

@@ -6,7 +6,7 @@
 @if ((int)TempData["AccessLevel"] != 3)
 {
     <div class="alert alert-danger">
-        This page is only available to users with the HR role.
+        This page is for Human Resources only.
     </div>
 }
 
@@ -15,9 +15,8 @@
     <div class="page">
         <div class="wrapper">
             <div class="form-box">
-
                 <h1>Register</h1>
-                <p>Register a New Lecturer to add them to the System.</p>
+                <p>Register a New Lecturer to add them to the system, so they may login and submit their own claims.</p>
 
                 <form asp-controller="Home" asp-action="RegisterUser" method="post">
 

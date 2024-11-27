@@ -45,7 +45,7 @@ namespace CMCS_Web_App.Controllers
         {
             if (!IsUserLoggedIn())
             {
-                TempData["Error"] = "You must be logged in to submit a claim.";
+                TempData["Error"] = "You must be logged in to view this page.";
                 return RedirectToAction("Login");
             }
 
@@ -63,7 +63,7 @@ namespace CMCS_Web_App.Controllers
         {
             if (!IsUserLoggedIn())
             {
-                TempData["Error"] = "You must be logged in to review a claim.";
+                TempData["Error"] = "You must be logged in to view this page.";
                 return RedirectToAction("Login");
             }
 
@@ -85,11 +85,11 @@ namespace CMCS_Web_App.Controllers
         //-----------------------------------------------------------------------------------
 
         // Process Payment for Approved Claims Page
-        public IActionResult SummarizeClaim()
+        public IActionResult ProcessClaim()
         {
             if (!IsUserLoggedIn())
             {
-                TempData["Error"] = "You must be logged in to summarize a claim.";
+                TempData["Error"] = "You must be logged in to view this page.";
                 return RedirectToAction("Login");
             }
 
@@ -111,11 +111,11 @@ namespace CMCS_Web_App.Controllers
         //-----------------------------------------------------------------------------------
 
         // Track  Claims Page
-        public IActionResult TrackAllClaims()
+        public IActionResult TrackClaim()
         {
             if (!IsUserLoggedIn())
             {
-                TempData["Error"] = "You must be logged in to track a claim.";
+                TempData["Error"] = "You must be logged in to view this page.";
                 return RedirectToAction("Login");
             }
 
@@ -134,11 +134,12 @@ namespace CMCS_Web_App.Controllers
             return View(claims);
         }
 
+        // Lecturers can view their own claims
         public IActionResult ViewUserClaim()
         {
             if (!IsUserLoggedIn())
             {
-                TempData["Error"] = "You must be logged in to view your claims.";
+                TempData["Error"] = "You must be logged in to view this page.";
                 return RedirectToAction("Login");
             }
 
@@ -157,7 +158,48 @@ namespace CMCS_Web_App.Controllers
             TempData["AccessLevel"] = _accessLvl;
 
             return View(userClaims);
+        }
 
+        //-----------------------------------------------------------------------------------
+
+        // Edit User Details Page for Human Resources
+        public IActionResult ViewUser()
+        {
+            if (!IsUserLoggedIn())
+            {
+                TempData["Error"] = "You must be logged in to view this page.";
+                return RedirectToAction("Login");
+            }
+
+            var users = new List<User>();
+
+            int _accessLvl = CheckAccessLevel();
+
+            // Check to see if the user logged in is in HR before populating the list of all the users.
+            if (_accessLvl == 3)
+            {
+                users = _context.User.ToList();
+            }
+
+            TempData["AccessLevel"] = _accessLvl;
+
+            return View(users);
+        }
+
+        //-----------------------------------------------------------------------------------
+
+        // Page to edit the selected user's details
+        [HttpPost]
+        public async Task<IActionResult> EditUserDetails(int id)
+        {
+            var user = await _context.User.FindAsync(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return View(user);
         }
 
         //-----------------------------------------------------------------------------------
@@ -179,7 +221,7 @@ namespace CMCS_Web_App.Controllers
         {
             if (!IsUserLoggedIn())
             {
-                TempData["Error"] = "You must be logged in to register a new lecturer.";
+                TempData["Error"] = "You must be logged in to view this page.";
                 return RedirectToAction("Login");
             }
 
@@ -195,7 +237,7 @@ namespace CMCS_Web_App.Controllers
         {
             if (!IsUserLoggedIn())
             {
-                TempData["Error"] = "You must be logged in to view your account details.";
+                TempData["Error"] = "You must be logged in to view this page.";
                 return RedirectToAction("Login");
             }
 
@@ -331,7 +373,7 @@ namespace CMCS_Web_App.Controllers
         // Download File Action
         public IActionResult DownloadFile(int Id)
         {
-            var claim = _context.UserClaim.FirstOrDefault(c => c.UserId == Id);
+            var claim = _context.UserClaim.FirstOrDefault(c => c.UserClaimId == Id);
 
             if (claim == null || claim.FileData == null)
             {
@@ -634,6 +676,28 @@ namespace CMCS_Web_App.Controllers
             }
 
             return File(claim.PdfFileData, "application/pdf", claim.PdfFileName);
+        }
+
+        //-----------------------------------------------------------------------------------
+
+        // Method to save the changes made to the user's details.
+        [HttpPost]
+        public async Task<IActionResult> SaveChanges(User user)
+        {
+            var existingUser = await _context.User.FindAsync(user.UserId);
+
+            existingUser.FirstName = user.FirstName;
+            existingUser.Surname = user.Surname;
+            existingUser.Email = user.Email;
+            existingUser.ContactNumber = user.ContactNumber;
+            existingUser.Faculty = user.Faculty;
+
+            _context.Update(existingUser);
+            await _context.SaveChangesAsync();
+
+            TempData["AccountChange"] = "The changes made were successfully saved!";
+
+            return RedirectToAction("ViewUser");
         }
 
         #endregion

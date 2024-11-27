@@ -1,33 +1,34 @@
 ﻿@model IEnumerable<CMCS_Web_App.Models.UserClaim>
-
 @{
-    ViewData["Title"] = "Summarize Claim";
+    ViewData["Title"] = "Track Claim";
 }
 
-@if ((int)TempData["AccessLevel"] != 3)
+@if ((int)TempData["AccessLevel"] == 1)
 {
     <div class="alert alert-danger">
-        This page is for HR only.
+        This page is for Administrators only.
     </div>
 }
 
-@if ((int)TempData["AccessLevel"] == 3)
+@if ((int)TempData["AccessLevel"] == 2 || (int)TempData["AccessLevel"] == 3)
 {
     <div class="page">
         <div class="wrapper">
             <div class="table">
-                <h1>Process Approved Claims</h1>
-                <p>Process the list of all approved claims below.</p>
+                <h1>Track All Claims</h1>
+                <p>View all requested claims below.</p>
                 <table>
                     <tr>
                         <th>Claim ID</th>
                         <th>User ID</th>
-                        <th>Full Name</th>
+                        <th>Lecturer Name</th>
+                        <th>Email</th>
+                        <th>Faculty</th>
                         <th>Claim Amount</th>
                         <th>Hours Worked</th>
                         <th>Hourly Rate</th>
-                        <th>File</th>
-                        <th>Review</th>
+                        <th>Supporting Doc</th>
+                        <th>Status</th>
                         <th>Invoice</th>
                     </tr>
 
@@ -37,20 +38,34 @@
                             <td>@claim.UserClaimId</td>
                             <td>@claim.UserId</td>
                             <td>@claim.User.FirstName @claim.User.Surname</td>
+                            <td>@claim.User.Email</td>
+                            <td>@claim.User.Faculty</td>
                             <td>R @claim.ClaimAmount</td>
                             <td>@claim.HoursWorked Hrs</td>
                             <td>R @claim.HourlyRate / h</td>
                             <td><a asp-controller="Home" asp-action="DownloadFile" asp-route-id="@claim.UserClaimId">@claim.FileName</a></td>
                             <td>
-                                <form asp-controller="Home" asp-action="MakePDF" method="post">
-                                    <input type="hidden" name="id" value="@claim.UserClaimId" />
-                                    <button class="btn btn-invoice" type="submit">Create Invoice</button>
-                                </form>
+                                @if (claim.ClaimStatus == "Pending")
+                                {
+                                    <span class="pending">Pending</span>
+                                }
+                                else if (claim.ClaimStatus == "Approved")
+                                {
+                                    <span class="approved">Approved</span>
+                                }
+                                else
+                                {
+                                    <span class="rejected">Rejected</span>
+                                }
                             </td>
                             <td>
                                 @if (claim.PdfFileData != null)
                                 {
                                     <a asp-controller="Home" asp-action="DownloadPdf" asp-route-id="@claim.UserClaimId">Download Invoice</a>
+                                }
+                                @if (claim.PdfFileData == null)
+                                {
+                                    <td>No Invoice</td>
                                 }
                             </td>
                         </tr>
@@ -60,5 +75,4 @@
         </div>
     </div>
 }
-
 
