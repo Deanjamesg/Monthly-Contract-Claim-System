@@ -1,10 +1,10 @@
-# Monthly Contract Claim System (CMCS)
+# Monthly Contract Claim System (MCCS)
 PROG6212 - Portfolio of Evidence  
 Programming 2B  
 ST10378305  
 Dean James Greeff  
 
-CMCS is a web application built with ASP.NET Core MVC and Entity Framework Core that streamlines the process of monthly contract claims for university lecturers. It provides a multi-tiered, role-based system for submitting, reviewing, processing, and tracking claims, ensuring an efficient and organized workflow.
+MCCS is a web application built with ASP.NET Core MVC and Entity Framework Core that streamlines the process of monthly contract claims for university lecturers. It provides a multi-tiered, role-based system for submitting, reviewing, processing, and tracking claims, ensuring an efficient and organized workflow.
 
 <img width="1907" height="899" alt="Screenshot 2025-09-20 103718" src="https://github.com/user-attachments/assets/c99a91de-eb8a-4f43-adb4-26eba0ba5ec7" />
 
@@ -71,8 +71,8 @@ Follow these instructions to get a copy of the project up and running on your lo
 
 1.  **Clone the repository:**
     ```sh
-    git clone [https://github.com/Deanjamesg/PROG6212-POE.git](https://github.com/Deanjamesg/PROG6212-POE.git)
-    cd PROG6212-POE
+    git clone [https://github.com/Deanjamesg/Monthly-Contract-Claim-System.git](https://github.com/Deanjamesg/Monthly-Contract-Claim-System.git)
+    cd Monthly-Contract-Claim-System
     ```
 
 2.  **Configure the database connection:**
