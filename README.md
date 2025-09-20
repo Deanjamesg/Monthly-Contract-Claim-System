@@ -1,4 +1,8 @@
 # Monthly Contract Claim System (CMCS)
+PROG6212 - Portfolio of Evidence  
+Programming 2B  
+ST10378305  
+Dean James Greeff  
 
 CMCS is a web application built with ASP.NET Core MVC and Entity Framework Core that streamlines the process of monthly contract claims for university lecturers. It provides a multi-tiered, role-based system for submitting, reviewing, processing, and tracking claims, ensuring an efficient and organized workflow.
 
